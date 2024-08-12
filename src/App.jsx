@@ -12,6 +12,7 @@ function App() {
       <p>tes repo</p>
       <h1>tes repo 2</h1>
       <h1>tes aulia</h1>
+      <P>ninun</P>
       
     </>
   )
