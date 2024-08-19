@@ -1,5 +1,6 @@
 
 import './App.css'
+import Sidebar from './component/button/view'
 import { primary } from './theme/color'
 
 
@@ -14,6 +15,7 @@ function App() {
       <h1>tes aulia</h1>
       <P>ninun</P>
       
+      <Sidebar/>
     </>
   )
 }
