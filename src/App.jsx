@@ -1,10 +1,7 @@
 import './App.css'
-
-import Sidebar from './component/button/view'
-
 import BasicButtonPrimary from './component/button-component/basic-button/view'
-
 import { primary } from './theme/color'
+import SidebarApp from './component/sidebar/view'
 
 
 function App() {
@@ -20,7 +17,7 @@ function App() {
 
       <BasicButtonPrimary />
       
-      <Sidebar/>
+      <SidebarApp />
     </>
   )
 }
