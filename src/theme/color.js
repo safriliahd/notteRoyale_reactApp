@@ -1,8 +1,12 @@
 export const primary = {
     100: "#EBC834",
     200: "#FFDD4C",
-    300: "#E9E9E9",
-    400: "D3D3D3",
-    500: "1E1E1E",
-    600: "D2B65F",
+    300: "#D2B65F",
   };
+export const  dark = {
+  100: "#E9E9E9",
+  200: "D3D3D3",
+  300: "1E1E1E",
+
+};
+
