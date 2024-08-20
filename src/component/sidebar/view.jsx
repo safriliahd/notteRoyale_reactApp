@@ -6,16 +6,24 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+// import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
+// import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import PeopleIcon from '@mui/icons-material/People';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+
+// import style
+import { primary, dark, light } from '../../theme/color';
+
 
 const drawerWidth = 240;
 
@@ -23,6 +31,7 @@ function ResponsiveDrawer(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const [activeIndex, setActiveIndex] = React.useState(0); // Track the active index
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -39,39 +48,66 @@ function ResponsiveDrawer(props) {
     }
   };
 
+  const handleListItemClick = (index) => {
+    setActiveIndex(index); // Set the active index when an item is clicked
+  };
+
   const drawer = (
     <div>
       <Toolbar />
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+        {['Dashboard', 'User List', 'Product List', 'Order List'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            <ListItemButton
+              onClick={() => handleListItemClick(index)}
+              sx={{
+                backgroundColor: activeIndex === index ? primary[100] : 'transparent',
+                '&:hover': {
+                  backgroundColor: dark[100],
+                },
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color: activeIndex === index ? light[100] : primary[100],
+                  '&:hover': {
+                    color: primary[100],
+                  },
+                }}
+              >
+                {(() => {
+                  switch (index) {
+                    case 0:
+                      return <DashboardIcon />;
+                    case 1:
+                      return <PeopleIcon />;
+                    case 2:
+                      return <RestaurantMenuIcon />;
+                    case 3:
+                      return <AssignmentIcon />;
+                    default:
+                      return null;
+                  }
+                })()}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText
+                primary={text}
+                sx={{
+                  color: activeIndex === index ? light[100] : primary[100],
+                  '&:hover': {
+                    color: primary[100],
+                  },
+                }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      {/* <Divider /> */}
     </div>
   );
 
-  // Remove this const when copying and pasting into your project.
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
