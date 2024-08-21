@@ -1,9 +1,7 @@
-import React from "react"
-
 export default function DashboardAdmin () {
     return (
         <>
-        <h1>admin Dashboard Page</h1>
+        <h1>admin product list Page</h1>
         </>
     )
 }
