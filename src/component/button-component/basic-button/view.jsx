@@ -9,12 +9,14 @@ export default function BasicButtonPrimary () {
       sx={{
         backgroundColor: primary[100],
         boxShadow: "none",
+        borderRadius: '10px',
         "&:hover": {
           boxShadow: "none",
         },
+        marginBottom: 5
       }}
     >
-      Button
+      basicbutton
     </Button>
   );
 }
