@@ -1,19 +1,28 @@
-/* App.css */
-html, body, #root {
+/* html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color: #F4F4F4; /* Warna abu-abu */
-}
+  background-color: #F4F4F4;
+} */
 
-body {
-  overflow: hidden; /* Opsional: untuk menghindari scroll jika tidak diinginkan */
-}
+/* body {
+  min-height: 100%; 
+  width: 100%;
+  background-color: #F4F4F4;
+  overflow-y: auto; 
+  overflow-x: hidden; 
+} */
 
-/* Media queries untuk perangkat mobile */
-@media (max-width: 600px) {
+/* #root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+} */
+
+/* Responsive background color */
+/* @media (max-width: 600px) {
   html, body, #root {
     background-color: #F4F4F4;
   }
-}
+} */

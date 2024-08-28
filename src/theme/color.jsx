@@ -12,3 +12,9 @@ export const light = {
   100: "#FFFFFF",
   200: "#F4F4F4",
 };
+export const succes = {
+  100: "#6FE29D",
+};
+export const danger = {
+  100: "#F56767",
+};
