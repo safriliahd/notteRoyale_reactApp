@@ -3,25 +3,27 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import { primary, light } from '../../../theme/color'; // Impor warna primary
+import { primary, light } from '../../../theme/color';
 import { useState } from 'react';
 
 
 const Item = styled(Paper)(({ theme, active }) => ({
-  backgroundColor: active ? primary[100] : light[100], // Gunakan warna primary[100]
+  backgroundColor: active ? primary[100] : light[100], 
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
-  color: active ? light[100] : primary[100], // Pastikan ini menggunakan warna yang kontras dengan background
-  borderRadius: '8px',
+  color: active ? light[100] : primary[100], 
+  borderRadius: 15,
   cursor: 'pointer', 
+  fontWeight: 'bold',
+  fontSize:24,
 }));
 
 export default function CategoryProduct() {
-  const [activeGrid, setActiveGrid] = React.useState(null); // State untuk melacak grid yang aktif
+  const [activeGrid, setActiveGrid] = React.useState(null); 
 
   const handleClick = (index) => {
-    setActiveGrid(index); // Ubah grid aktif sesuai dengan yang di-klik
+    setActiveGrid(index); 
   };
   return (
     <Box sx={{ width: '100%', marginTop: 2 }}>

@@ -16,7 +16,7 @@ export default function BasicButtonPrimary () {
         marginBottom: 5
       }}
     >
-      basicbutton
+      
     </Button>
   );
 }
