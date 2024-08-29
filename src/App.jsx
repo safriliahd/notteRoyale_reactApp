@@ -1,21 +1,19 @@
-
-import { Box } from '@mui/material'
-import './App.css'
-import RouterAdmin from './router/routerAdmin/view'
-// import { light } from './theme/color'
-
-
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import RouterAdmin from './router/routerAdmin/view';
+import PageSingIn from './screen/signIn/view';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // This is just a mock state
 
   return (
-    <>
-      <RouterAdmin/>
-    </>
-  //   <Box sx={{ backgroundColor: '#F4F4F4', minHeight: '100vh', width: '100vw' }}>
-  //   <RouterAdmin />
-  // </Box>
-  )
+    <Router>
+      <Routes>
+        <Route path="/login" element={<PageSingIn />} />
+        <Route path="/*" element={isLoggedIn ? <RouterAdmin /> : <PageSingIn />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

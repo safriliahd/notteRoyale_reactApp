@@ -8,6 +8,7 @@ export const  dark = {
   200: "#D3D3D3",
   300: "#1E1E1E",
   400: "#696262",
+  500: "#1E2126",
 };
 export const light = {
   100: "#FFFFFF",
