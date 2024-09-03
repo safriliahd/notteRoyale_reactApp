@@ -12,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<PageSingIn />} />
         <Route path="/*" element={isLoggedIn ? <RouterAdmin /> : <PageSingIn />} />
-        
+        <Route path="/sign-up" element={<PageSignUp />}/>
       </Routes>
     </Router>
   );
