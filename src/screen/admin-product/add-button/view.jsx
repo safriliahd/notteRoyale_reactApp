@@ -3,6 +3,7 @@ import { Button } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { createSvgIcon } from '@mui/material/utils';
 import { primary } from '../../../theme/color'; // Import warna primary
+import { useNavigate } from 'react-router-dom';
 
 // Ikon Plus
 const PlusIcon = createSvgIcon(
@@ -19,12 +20,19 @@ const PlusIcon = createSvgIcon(
 );
 
 export default function IconButton() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/data-product-edit');
+  }
+
   return (
     <Stack direction="row" spacing={3}>
       {/* Tombol dengan ikon Plus dan teks "Add" */}
       <Button
         variant="contained"
         startIcon={<PlusIcon />}
+        onClick={handleClick}
         sx={{
           backgroundColor: primary[100], // Warna primary dari file color.js
           borderRadius: 15,

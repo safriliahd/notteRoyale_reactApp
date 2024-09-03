@@ -7,6 +7,7 @@ import DashboardAdmin from '../../screen/admin-dashboard/view';
 import UserListAdmin from '../../screen/admin-userList/view';
 import ProductListAdmin from '../../screen/admin-product/view';
 import OrderListAdmin from '../../screen/admin-orderList/view';
+import DataProductCRUD from '../../screen/admin-product-crud/view';
 
 export default function RouterAdmin() {
   return (
@@ -16,6 +17,7 @@ export default function RouterAdmin() {
         <Route path="/user-list" element={<UserListAdmin />} />
         <Route path="/product-list" element={<ProductListAdmin />} />
         <Route path="/order-list" element={<OrderListAdmin />} />
+        <Route path='/data-product-edit' element={<DataProductCRUD />} />
       </Routes>
     </SidebarUI>
   );
