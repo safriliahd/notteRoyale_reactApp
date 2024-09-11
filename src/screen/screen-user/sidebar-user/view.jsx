@@ -18,13 +18,17 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 //icon
 import DashboardIcon from '@mui/icons-material/Dashboard';
+
 import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import { Link } from 'react-router-dom';
 // import style
-import { primary, dark, light } from '../../theme/color';
-import Logo from '../../../public/logo.svg';
+import Logo from '../../../../public/logo.svg';
+import { primary, dark, light } from '../../../theme/color';
 
 const drawerWidth = 240;
 
@@ -93,7 +97,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function SidebarUI({ children }) {
+export default function SidebarUser({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0); // Track the active index
@@ -167,10 +171,9 @@ export default function SidebarUI({ children }) {
         <Divider />
         <List>
           {[
-            { text: 'Dashboard', path: '/' },
-            { text: 'User List', path: '/user-list' },
-            { text: 'Product List', path: '/product-list' },
-            { text: 'Order List', path: '/order-list' },
+            { text: 'Dashboard', path: '/dashboard-user' },
+            { text: 'Table', path: '/table' },
+            { text: 'My Order', path: '/my-order' },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
@@ -178,7 +181,7 @@ export default function SidebarUI({ children }) {
                 to={item.path}
                 onClick={() => {
                   handleListItemClick(index);
-                  console.log("Navigating to", item.path); // Log saat navigasi dilakukan
+                  console.log("Navigating to", item.path); 
                 }}
                 sx={{
                   minHeight: 48,
@@ -207,10 +210,8 @@ export default function SidebarUI({ children }) {
                       case 0:
                         return <DashboardIcon />;
                       case 1:
-                        return <PeopleIcon />;
+                        return <TableRestaurantIcon />;
                       case 2:
-                        return <RestaurantMenuIcon />;
-                      case 3:
                         return <AssignmentIcon />;
                       default:
                         return null;
@@ -230,7 +231,6 @@ export default function SidebarUI({ children }) {
             </ListItem>
           ))}
         </List>
-        <Divider />
       </Drawer>
       <Box 
         component="main" 

@@ -48,7 +48,7 @@ export default function PageSignUp() {
                         flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
-                        padding: theme.spacing(4), // Menggunakan theme.spacing
+                        padding: theme.spacing(4), 
                         backgroundColor: dark[500],
                     }}
                 >

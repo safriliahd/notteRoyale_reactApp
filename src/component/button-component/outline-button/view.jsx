@@ -19,7 +19,7 @@ export default function OutlineButton() {
           },
         }}
       >
-        Outlined
+        Add to Cart
       </Button>
     </Stack>
   );
