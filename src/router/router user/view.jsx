@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import SidebarUser from '../../screen/screen-user/sidebar-user/view';
 import PageDashboardUser from '../../screen/screen-user/user-dashboard/view';
@@ -10,7 +9,7 @@ export default function RouterUser() {
         <>
         <SidebarUser>
             <Routes>
-                <Route path='/' element={<PageDashboardUser />} />
+                <Route path='/user-dashboard' element={<PageDashboardUser />} />
                 <Route path='/table' element={<TableUser />} />
                 <Route path='/my-order' element={<OrderUser />} />
             </Routes>

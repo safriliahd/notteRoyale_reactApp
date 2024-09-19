@@ -171,7 +171,7 @@ export default function SidebarUser({ children }) {
         <Divider />
         <List>
           {[
-            { text: 'Dashboard', path: '/dashboard-user' },
+            { text: 'Dashboard', path: '/user-dashboard' },
             { text: 'Table', path: '/table' },
             { text: 'My Order', path: '/my-order' },
           ].map((item, index) => (

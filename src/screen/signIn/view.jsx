@@ -1,13 +1,37 @@
-import React from "react";
 import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import backgroundLogin from "../../../public/background.jpg";
 import { dark, light, primary } from "../../theme/color";
+import { login } from '../../api/auth';
+
 
 export default function PageSignIn() {
   const theme = useTheme(); 
   const navigate = useNavigate();
+
+  const [ email, setEmail ] = useState("");
+  const [ password, setPassword ] = useState("");
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    if (name === "email") setEmail(value);
+    if (name === "password") setPassword(value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const data = await login(email, password);
+      console.log("Login Successful", data);
+      navigate("/dashboard-user");
+    } catch (error) {
+      console.error("Error during login: ", error.message);
+      alert(error.message);
+    }
+  }
 
   const handleSignUpClick = () => {
     navigate('/sign-up'); 
@@ -60,7 +84,7 @@ export default function PageSignIn() {
         >
           Sign In
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
+        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={ handleSubmit }>
           <TextField
             margin="normal"
             fullWidth
@@ -68,6 +92,8 @@ export default function PageSignIn() {
             id="email"
             label="Email Address"
             autoComplete="email"
+            value={email}
+            onChange={handleInputChange}
             sx={{
               "& .MuiInputLabel-root": { color: dark[100] },
               "& .MuiInputLabel-root.Mui-focused": { color: dark[100] },
@@ -101,6 +127,8 @@ export default function PageSignIn() {
             label="Password"
             type="password"
             autoComplete="current-password"
+            value={password}
+            onChange={handleInputChange}
             sx={{
               "& .MuiInputLabel-root": { color: dark[100] },
               "& .MuiOutlinedInput-root": {

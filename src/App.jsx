@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RouterAdmin from './router/routerAdmin/view';
 import PageSingIn from './screen/signIn/view';

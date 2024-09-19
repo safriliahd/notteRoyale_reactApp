@@ -1,5 +1,4 @@
 // src/router/routerAdmin/view.js
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import SidebarUI from '../../component/sidebar/view';
 
@@ -13,7 +12,7 @@ export default function RouterAdmin() {
   return (
     <SidebarUI>
       <Routes>
-        <Route path="/" element={<DashboardAdmin />} />
+        <Route path="/dashboard-admin" element={<DashboardAdmin />} />
         <Route path="/user-list" element={<UserListAdmin />} />
         <Route path="/product-list" element={<ProductListAdmin />} />
         <Route path="/order-list" element={<OrderListAdmin />} />
