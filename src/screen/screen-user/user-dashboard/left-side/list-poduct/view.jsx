@@ -1,4 +1,6 @@
+import React from "react";
 import { Box, Card, CardMedia, CardContent, Grid, Paper, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import ImageNotte from "../../../../../../public/background.jpg";
 
 // Sample data array for cards
@@ -12,19 +14,27 @@ const menuData = [
 ];
 
 export default function ListProductDashboard() {
+  const navigate = useNavigate(); 
+  
+  const handleCardClick = (id) => {
+    navigate(`/product/${id}`); // Navigate to the product detail page with the product ID
+  };
+
   return (
     <Box sx={{ marginTop: 5, padding: 0 }}>
-      <Grid container spacing={3} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingLeft: 0, borderRadius: 10,marginBottom: 5 }}>
+      <Grid container spacing={3} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingLeft: 0, borderRadius: 10, marginBottom: 5 }}>
         {menuData.map((menu) => (
           <Grid key={menu.id} item xs={4} sm={8} md={4} sx={{ mb: { xs: 5, sm: 0 } }}>
             <Paper
               elevation={0}
               sx={{
-                backgroundColor: 'transparent',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch',
+                backgroundColor: "transparent",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "stretch",
+                cursor: "pointer", 
               }}
+              onClick={() => handleCardClick(menu.id)}
             >
               <Card sx={{ flex: 1, borderRadius: 5 }}>
                 <CardMedia
@@ -33,21 +43,21 @@ export default function ListProductDashboard() {
                   alt={menu.name}
                   sx={{ height: 300 }}
                 />
-                <CardContent sx={{ textAlign: 'center', paddingBottom: 0 }}>
+                <CardContent sx={{ textAlign: "center", paddingBottom: 0 }}>
                   <Typography
                     gutterBottom
                     component="div"
                     sx={{
                       fontSize: 16,
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                     }}
                   >
                     {menu.name}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', fontSize: 18 }}>
+                  <Typography sx={{ color: "text.secondary", fontSize: 18 }}>
                     {menu.price}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary', fontSize: 14 }}>
+                  <Typography sx={{ color: "text.secondary", fontSize: 14 }}>
                     {menu.rating}
                   </Typography>
                 </CardContent>

@@ -1,14 +1,10 @@
-// export default function DataProductCRUD () {
-//     return (
-//         <h1>test crud</h1>
-//     )
-// }
 
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { light } from '../../theme/color';
 import LeftDataCRUD from './view-left/view';
+import RightDataCRUD from './view-right/view';
 
 const Container = styled(Box)(({ theme }) => ({
   display: 'grid',
@@ -38,7 +34,8 @@ export default function DataProductCRUD() {
       <Column sx={{padding: 0}}> 
         <Typography variant="h6">Right Column</Typography>
         <Box  sx={{ flex: 1, width: '100%', padding: 0 }}>
-        </Box>
+        <RightDataCRUD />
+        </Box>  
       </Column>
     </Container>
   );
