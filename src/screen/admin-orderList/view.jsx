@@ -5,7 +5,7 @@ import { light, primary } from "../../theme/color"; // Pastikan ini adalah warna
 import OrderListButton from "./orderList-button/view";
 import OrderListData from "./orderList-table/view";
 
-export default function ProductListAdmin() {
+export default function OrderListAdmin() {
     return (
         <Box sx={{ marginTop: 3 }}>
             <OrderListButton />

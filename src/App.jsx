@@ -18,8 +18,6 @@ function App() {
         <Route path="/login" element={<PageSingIn />} />
         <Route path="/sign-up" element={<PageSignUp />} />
 
-        {/* <Route path="/*" element={isLoggedIn ? <RouterAdmin /> : <PageSingIn />} /> */}
-
         <Route
           path="/*"
           element={

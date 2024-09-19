@@ -167,7 +167,7 @@ export default function SidebarUI({ children }) {
         <Divider />
         <List>
           {[
-            { text: 'Dashboard', path: '/' },
+            { text: 'Dashboard', path: '/admin-dashboard' },
             { text: 'User List', path: '/user-list' },
             { text: 'Product List', path: '/product-list' },
             { text: 'Order List', path: '/order-list' },
