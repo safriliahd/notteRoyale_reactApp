@@ -26,7 +26,7 @@ export default function PageSignIn() {
     try {
       const data = await login(email, password);
       console.log("Login Successful", data);
-      navigate("/dashboard-user");
+      navigate("/user-dashboard");
     } catch (error) {
       console.error("Error during login: ", error.message);
       alert(error.message);
