@@ -1,4 +1,4 @@
-import httpClient from '../utils/httpClient';
+import httpClient from "../../../API/httpClient";
 
 export const login = async (email, password) => {
   try {
