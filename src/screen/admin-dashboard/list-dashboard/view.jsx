@@ -22,7 +22,7 @@ const ListData = [
     { id: 3, title: 'User', value: '15' }
 ];
 
-export default function ResponsiveGrid() {
+export default function ListDashboardAdmin () {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={{ xs: 1, md: 3 }} columns={{ xs: 1, sm: 8, md: 12 }}>
