@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import backgroundLogin from "../../../public/background.jpg";
 import { dark, light, primary } from "../../theme/color";
-import { login } from '../../api/auth';
+import { login } from '../../store/endpoint/auth/signIn/view';
 
 
 export default function PageSignIn() {
@@ -25,11 +25,18 @@ export default function PageSignIn() {
 
     try {
       const data = await login(email, password);
-      console.log("Login Successful", data);
-      navigate("/user-dashboard");
+      const { token, role } = data;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+
+      if(role === 'admin') {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/user-dashboard");
+      }
     } catch (error) {
-      console.error("Error during login: ", error.message);
-      alert(error.message);
+      SetError(error.message);
     }
   }
 
