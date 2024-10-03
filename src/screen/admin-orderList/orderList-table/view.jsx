@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-// Definisikan kolom tabel
+// Define columns
 const columns = [
   { id: 'id', label: 'Id', minWidth: 100 },
   { id: 'category', label: 'Category', minWidth: 150 },
@@ -21,14 +21,14 @@ const columns = [
     id: 'totalPrice',
     label: 'Total Price',
     minWidth: 170,
-    align: 'center', // Rata tengah
+    align: 'center',
     format: (value) => value.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
   },
   {
     id: 'quantity',
     label: 'Quantity',
     minWidth: 150,
-    align: 'center', // Rata tengah
+    align: 'center',
   },
   {
     id: 'done',
@@ -38,19 +38,18 @@ const columns = [
   },
 ];
 
-// Data dummy
+// Dummy data
 const rows = [
   { id: 1, category: 'Electronics', name: 'Laptop', totalPrice: 999.99, quantity: 5, done: true },
   { id: 2, category: 'Furniture', name: 'Chair', totalPrice: 49.99, quantity: 10, done: false },
   { id: 3, category: 'Books', name: 'React Guide', totalPrice: 29.99, quantity: 15, done: true },
   { id: 4, category: 'Clothing', name: 'Jacket', totalPrice: 79.99, quantity: 7, done: false },
   { id: 5, category: 'Kitchen', name: 'Blender', totalPrice: 89.99, quantity: 4, done: true },
-  { id: 1, category: 'Electronics', name: 'Laptop', totalPrice: 999.99, quantity: 5, done: true },
-  { id: 2, category: 'Furniture', name: 'Chair', totalPrice: 49.99, quantity: 10, done: false },
-  { id: 3, category: 'Books', name: 'React Guide', totalPrice: 29.99, quantity: 15, done: true },
-  { id: 4, category: 'Clothing', name: 'Jacket', totalPrice: 79.99, quantity: 7, done: false },
-  { id: 5, category: 'Kitchen', name: 'Blender', totalPrice: 89.99, quantity: 4, done: true },
-
+  { id: 6, category: 'Electronics', name: 'Headphones', totalPrice: 199.99, quantity: 3, done: true },
+  { id: 7, category: 'Furniture', name: 'Table', totalPrice: 129.99, quantity: 8, done: false },
+  { id: 8, category: 'Books', name: 'JavaScript Guide', totalPrice: 39.99, quantity: 12, done: true },
+  { id: 9, category: 'Clothing', name: 'Sunglasses', totalPrice: 59.99, quantity: 5, done: false },
+  { id: 10, category: 'Kitchen', name: 'Toaster', totalPrice: 29.99, quantity: 6, done: true },
 ];
 
 export default function OrderListData() {
@@ -121,7 +120,7 @@ export default function OrderListData() {
                     borderBottom: '2px solid black',
                     fontWeight: 'bold',
                     fontSize: '1.2rem',
-                    textAlign: column.align || 'center', // Rata tengah untuk judul kolom
+                    textAlign: column.align || 'center', // Center text for column headers
                   }}
                 >
                   {column.label}
@@ -157,7 +156,7 @@ export default function OrderListData() {
                           align={column.align || 'center'}
                           sx={{
                             borderLeft: 'none',
-                            textAlign: column.align || 'center', // Rata tengah untuk data kolom
+                            textAlign: column.align || 'center', // Center text for data cells
                           }}
                         >
                           {column.format && typeof value === 'number'
@@ -180,6 +179,26 @@ export default function OrderListData() {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          '& .MuiTablePagination-selectLabel': {
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          },
+          '& .MuiTablePagination-select': {
+            display: 'flex',
+            justifyContent: 'center',
+            textAlign: 'center',
+          },
+          '& .MuiTablePagination-actions': {
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          },
+        }}
       />
     </Paper>
   );

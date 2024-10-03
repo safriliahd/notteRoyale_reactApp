@@ -8,9 +8,9 @@ import RouterUser from './router/router user/view';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true); // This is just a mock state
 
-  const [role, setRole] = useState('admin');
+  // const [role, setRole] = useState('admin');
 
-  // const [role, setRole] = useState('user');
+  const [role, setRole] = useState('user');
 
   return (
     <Router>
