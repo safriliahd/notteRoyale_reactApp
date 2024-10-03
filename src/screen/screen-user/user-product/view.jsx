@@ -2,6 +2,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import { dark, light } from "../../../theme/color";
 import RightSideProduct from "./right-side/view";
 import LeftSideProduct from "./left-side/view";
+import LeftSideProductDetail from "./left-side/view";
 
 export default function PageUserProduct () {
     return (
@@ -33,7 +34,7 @@ export default function PageUserProduct () {
                                 borderRadius: 5,
                                 // justifyContent: 'center', 
                             }}>                           
-                                <LeftSideProduct />
+                                <LeftSideProductDetail />
                         </Paper>
                         <Box>
                             

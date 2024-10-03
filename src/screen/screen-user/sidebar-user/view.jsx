@@ -18,12 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 //icon
 import DashboardIcon from '@mui/icons-material/Dashboard';
-
-import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import { Link } from 'react-router-dom';
 // import style
