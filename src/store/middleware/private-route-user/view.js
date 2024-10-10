@@ -11,7 +11,7 @@ const PrivateUserRoute = ({ children }) => {
   }
 
   if (role !== 'user') {
-    return <Navigate to="/dashboard-admin" />; // Jika bukan user, arahkan ke admin dashboard
+    return <Navigate to="/admin-dashboard" />; // Jika bukan user, arahkan ke admin dashboard
   }
 
   return children;
