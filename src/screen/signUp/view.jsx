@@ -208,7 +208,7 @@ export default function PageSignUp() {
                                     },
                                 }}
                             >
-                                Sign In
+                                Sign Up
                             </Button>
                         </Box>
                         <Box display="flex" alignItems="center" justifyContent="center" mt={2}>
