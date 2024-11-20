@@ -1,41 +1,82 @@
 import * as React from 'react';
-import CardMedia from '@mui/material/CardMedia';
-import TextField from '@mui/material/TextField';
-import { useState } from 'react';
-import { primary, dark } from '../../../theme/color';
+import { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/system';
-import Notte from "../../../../public/background.jpg";
+import TextField from '@mui/material/TextField';
+import { primary, dark } from '../../../theme/color';
 
 export default function LeftDataCRUD() {
     const [focused, setFocused] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null); // State untuk menyimpan gambar yang diunggah
+
+    // Fungsi untuk menangani file yang di-drag-and-drop
+    const onDrop = useCallback((acceptedFiles) => {
+        const file = acceptedFiles[0];
+        if (file) {
+            setSelectedImage(URL.createObjectURL(file));
+        }
+    }, []);
+
+    // Menggunakan useDropzone dari react-dropzone
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: 'image/jpeg, image/png, image/jpg', // Tipe file yang diterima
+        multiple: false, // Hanya menerima satu file
+    });
 
     return (
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100vh', // Pastikan Box utama mengisi tinggi viewport
+                maxheight: '90vh',
                 padding: 2,
                 '& .MuiTextField-root': {
                     m: 1,
-                    width: 'calc(100% - 16px)', // Mengurangi lebar TextField untuk memberikan padding di sisi kiri
+                    width: 'calc(100% - 16px)',
                 },
                 '& > .MuiBox-root': {
-                    // Menjaga TextField sejajar dengan CardMedia
                     marginTop: 2,
                 },
             }}
         >
-            <CardMedia
-                sx={{ height: 400 }}
-                image={Notte}
-                title="foto product"
-            />
+            <Box
+                {...getRootProps()}
+                sx={{
+                    height: 400,
+                    border: '2px dashed',
+                    borderColor: isDragActive ? primary[100] : 'blue',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: selectedImage ? 'transparent' : dark[200], // Mengubah background menjadi transparan jika ada gambar
+                    cursor: 'pointer',
+                    transition: 'border 0.3s ease-in-out',
+                }}
+            >
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                    <p>Drop the files here ...</p>
+                ) : selectedImage ? (
+                    <Box
+                        component="img"
+                        src={selectedImage}
+                        alt="Preview"
+                        sx={{
+                            maxHeight: '400px', // Batas tinggi maksimum
+                            width: 'auto', // Menjaga proporsi lebar
+                            objectFit: 'contain', // Menjaga gambar agar tidak terpotong
+                        }}
+                    />
+                ) : (
+                    <p>Drag 'n' drop an image here, or click to select one</p>
+                )}
+            </Box>
 
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'flex-start', // Menyelaraskan kotak deskripsi dengan batas kiri
+                    justifyContent: 'flex-start',
                 }}
             >
                 <TextField
@@ -71,8 +112,8 @@ export default function LeftDataCRUD() {
                         '& .MuiInputBase-input::placeholder': {
                             color: focused ? dark[500] : 'initial',
                         },
-                        marginTop: 2, // Jarak antara gambar dan kotak deskripsi
-                        marginLeft: 2, // Menggeser kotak deskripsi sedikit ke kiri
+                        marginTop: 2,
+                        marginLeft: 2,
                     }}
                 />
             </Box>

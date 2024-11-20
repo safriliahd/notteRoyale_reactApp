@@ -22,7 +22,7 @@ export default function RightDataCRUD() {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100vh', // Pastikan Box utama mengisi tinggi viewport
+                maxHeight: '90vh', // Batasi tinggi maksimum menjadi 100vh
                 padding: 2,
                 '& .MuiTextField-root': {
                     m: 1,
@@ -39,7 +39,7 @@ export default function RightDataCRUD() {
                 label="Nama"
                 defaultValue="Hello World"
                 fullWidth
-                sx={{ 
+                sx={{
                     marginBottom: 3,
                     '& .MuiInputLabel-root': {
                         color: primary[100],
@@ -67,7 +67,7 @@ export default function RightDataCRUD() {
                 label="Price"
                 defaultValue="Hello World"
                 fullWidth
-                sx={{ 
+                sx={{
                     marginBottom: 3,
                     '& .MuiInputLabel-root': {
                         color: primary[100],
@@ -95,7 +95,7 @@ export default function RightDataCRUD() {
                 label="Category"
                 defaultValue="EUR"
                 fullWidth
-                sx={{ 
+                sx={{
                     marginBottom: 3,
                     '& .MuiInputLabel-root': {
                         color: primary[100],
@@ -129,7 +129,7 @@ export default function RightDataCRUD() {
                 id="outlined-disabled"
                 label="Rating"
                 defaultValue=""
-                sx={{ 
+                sx={{
                     marginBottom: 3,
                     '& .MuiInputLabel-root': {
                         color: primary[100],
@@ -164,6 +164,8 @@ export default function RightDataCRUD() {
                     ),
                 }}
             />
+
+            <Box sx={{ flexGrow: 1 }} />
 
             <Box
                 sx={{
