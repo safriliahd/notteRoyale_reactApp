@@ -13,6 +13,7 @@ export default function PageSignIn() {
 
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
+  const [  SetError ] = useState("");
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

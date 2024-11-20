@@ -23,7 +23,6 @@ export default function PageSignUp() {
         try {
             const result = await register(name, email, password); 
             console.log(result); 
-            alert('hhh');
             navigate('/login'); 
         } catch (error) {
             setError(error.message);
