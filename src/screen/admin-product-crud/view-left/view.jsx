@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Box } from '@mui/system';
@@ -8,28 +9,43 @@ import { primary, dark } from '../../../theme/color';
 export default function LeftDataCRUD() {
     const [focused, setFocused] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null); // State untuk menyimpan gambar yang diunggah
+    const [formData, setFormData] = useState({
+        name: '',
+        price: '',
+        category: 'food', // default category is food
+        subcategory: 'Indonesian Food', // default subcategory for food
+        description: '',
+        image: null,
+    });
+    const [loading, setLoading] = useState(false); // Untuk melacak status upload
 
     // Fungsi untuk menangani file yang di-drag-and-drop
-    const onDrop = useCallback((acceptedFiles) => {
-        const file = acceptedFiles[0];
-        if (file) {
-            setSelectedImage(URL.createObjectURL(file));
-        }
-    }, []);
-
-    // Menggunakan useDropzone dari react-dropzone
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
-        accept: 'image/jpeg, image/png, image/jpg', // Tipe file yang diterima
-        multiple: false, // Hanya menerima satu file
+        accept: 'image/*',
+        onDrop: (acceptedFiles) => {
+            const file = acceptedFiles[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedImage(reader.result); // Menyimpan URL gambar
+                setFormData(prevData => ({ ...prevData, image: file })); // Menyimpan file gambar ke form data
+            };
+            if (file) reader.readAsDataURL(file); // Membaca gambar sebagai URL
+        },
     });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
+
 
     return (
         <Box
+            // Form submission handler
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                maxheight: '90vh',
+                maxHeight: '90vh',
                 padding: 2,
                 '& .MuiTextField-root': {
                     m: 1,
@@ -40,6 +56,7 @@ export default function LeftDataCRUD() {
                 },
             }}
         >
+            {/* Image Upload Box */}
             <Box
                 {...getRootProps()}
                 sx={{
@@ -56,7 +73,7 @@ export default function LeftDataCRUD() {
             >
                 <input {...getInputProps()} />
                 {isDragActive ? (
-                    <p>Drop the files here ...</p>
+                    <p>Drop the files here...</p>
                 ) : selectedImage ? (
                     <Box
                         component="img"
@@ -73,50 +90,20 @@ export default function LeftDataCRUD() {
                 )}
             </Box>
 
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                }}
-            >
-                <TextField
-                    id="outlined-multiline-static"
-                    label="Deskripsi"
-                    multiline
-                    fullWidth
-                    rows={4}
-                    placeholder="Input your description"
-                    onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
-                    sx={{
-                        '& .MuiInputLabel-root': {
-                            color: focused ? primary[100] : 'initial',
-                        },
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': {
-                                borderColor: focused ? primary[100] : 'initial',
-                            },
-                            '&:hover fieldset': {
-                                borderColor: focused ? primary[100] : 'initial',
-                            },
-                            '&.Mui-focused fieldset': {
-                                borderColor: primary[100],
-                            },
-                            '& input': {
-                                color: focused ? primary[100] : 'initial',
-                            },
-                            '& .MuiInputBase-input': {
-                                color: focused ? dark[300] : 'initial',
-                            },
-                        },
-                        '& .MuiInputBase-input::placeholder': {
-                            color: focused ? dark[500] : 'initial',
-                        },
-                        marginTop: 2,
-                        marginLeft: 2,
-                    }}
-                />
-            </Box>
+            {/* Input Fields */}
+
+            {/* Description Input */}
+            <TextField
+                id="product-description"
+                label="Description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                multiline
+                rows={4}
+                fullWidth
+                sx={{ marginTop: 2 }}
+            />
         </Box>
     );
 }
