@@ -11,6 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { listUsers } from '../../../store/endpoint/users/view'; // Fungsi untuk fetch data dari backend
 
 // Definisikan kolom tabel
 const columns = [
@@ -19,24 +20,30 @@ const columns = [
   { id: 'email', label: 'Email', minWidth: 200 },
 ];
 
-// Data dummy
-const rows = [
-  { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
-  { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
-  { id: 3, name: 'Michael Johnson', email: 'michael.johnson@example.com' },
-  { id: 4, name: 'Emily Davis', email: 'emily.davis@example.com' },
-  { id: 5, name: 'Daniel Brown', email: 'daniel.brown@example.com' },
-  { id: 6, name: 'Olivia Wilson', email: 'olivia.wilson@example.com' },
-  { id: 7, name: 'James Miller', email: 'james.miller@example.com' },
-  { id: 8, name: 'Sophia Taylor', email: 'sophia.taylor@example.com' },
-  { id: 9, name: 'Alexander Anderson', email: 'alexander.anderson@example.com' },
-  { id: 10, name: 'Mia Thomas', email: 'mia.thomas@example.com' },
-];
-
 export default function UserListData() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [selected, setSelected] = React.useState([]);
+  const [rows, setRows] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await listUsers();
+        // Transformasi data response
+        const transformedData = data.map((user) => ({
+          id: user.userId, // Gunakan userId dari backend
+          name: user.name,
+          email: user.email,
+        }));
+        setRows(transformedData);
+      } catch (error) {
+        console.error('Failed to fetch users:', error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -101,7 +108,7 @@ export default function UserListData() {
                     borderBottom: '2px solid black',
                     fontWeight: 'bold',
                     fontSize: '1.2rem',
-                    textAlign: column.align || 'center', // Rata tengah untuk judul kolom
+                    textAlign: column.align || 'center',
                   }}
                 >
                   {column.label}
@@ -137,7 +144,7 @@ export default function UserListData() {
                           align={column.align || 'center'}
                           sx={{
                             borderLeft: 'none',
-                            textAlign: column.align || 'center', // Rata tengah untuk data kolom
+                            textAlign: column.align || 'center',
                           }}
                         >
                           {value}
