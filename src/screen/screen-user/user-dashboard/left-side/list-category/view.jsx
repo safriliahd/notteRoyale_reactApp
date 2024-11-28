@@ -1,34 +1,54 @@
-import { Box, Paper, Typography, TextField, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { Box, Paper, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import { getProductsByCategory } from "../../../../../store/endpoint/endpoint-user/product/view"; // Endpoint API untuk fetch data
 import { dark, light, primary } from "../../../../../theme/color";
+import ListProductDashboard from "../list-poduct/view";
 
+// Subkategori berdasarkan kategori
+const subcategoriesMap = {
+    Food: ["Indonesian Food", "Italian", "Korean", "American", "Chinese", "Japanese"],
+    Drink: ["Hot", "Cold"],
+    Dessert: ["Hot", "Cold"],
+};
 
-const subcategories = ["Indonesian", "Italian", "Korean", "American", "Chinese", "Japanese"];
 const categories = ["Food", "Drink", "Dessert"];
 
 export default function ListCategoryDashboard() {
     const [activeCategory, setActiveCategory] = useState(null);
     const [activeSubCategory, setActiveSubCategory] = useState(null);
+    const [products, setProducts] = useState([]);
 
+    // Fetch produk berdasarkan kategori dan subkategori
+    const fetchProducts = async (category, subCategory) => {
+        try {
+            const data = await getProductsByCategory(category, subCategory);
+            setProducts(data); // Simpan data produk
+        } catch (error) {
+            console.error("Error fetching products:", error.message);
+        }
+    };
+
+    // Handle klik kategori
     const handleCategoryClick = (category) => {
-        setActiveCategory(category);
-        setActiveSubCategory(null);
+        setActiveCategory(category); // Set active category saat kategori diklik
+        setActiveSubCategory(null); // Reset subkategori saat kategori berubah
     };
 
-    const handleSubCategoryClick = (subcategory) => {
-        setActiveSubCategory(subcategory);
+    // Handle klik subkategori
+    const handleSubCategoryClick = (category, subcategory) => {
+        setActiveSubCategory(subcategory); // Set active subcategory saat subkategori diklik
+        fetchProducts(category, subcategory); // Fetch produk sesuai kategori dan subkategori
     };
 
-    const handleCategoryChange = (event) => {
-        handleCategoryClick(event.target.value);
-    };
+    // Subkategori untuk kategori yang dipilih
+    const subcategories = activeCategory ? subcategoriesMap[activeCategory] : [];
 
-    const handleSubCategoryChange = (event) => {
-        handleSubCategoryClick(event.target.value);
-    };
-
-    // Calculate the number of subcategories
-    const itemCount = subcategories.length;
+    // Memanggil fetchProducts setiap kali kategori atau subkategori berubah
+    useEffect(() => {
+        if (activeCategory && activeSubCategory) {
+            fetchProducts(activeCategory, activeSubCategory);
+        }
+    }, [activeCategory, activeSubCategory]);
 
     return (
         <>
@@ -48,15 +68,8 @@ export default function ListCategoryDashboard() {
                         onClick={() => handleCategoryClick(category)}
                         sx={{
                             padding: 2,
-                            paddingTop: 1,
-                            paddingBottom: 1,
-                            width: {
-                                xs: '100%',
-                                sm: '30%',
-                            },
                             borderRadius: 5,
                             cursor: 'pointer',
-                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
                             backgroundColor: activeCategory === category ? primary[100] : light[100],
                             transition: 'all 0.3s',
                             '&:hover': {
@@ -69,7 +82,6 @@ export default function ListCategoryDashboard() {
                             sx={{
                                 fontWeight: 'bold',
                                 color: activeCategory === category ? light[100] : primary[100],
-                                fontSize: { xs: 'body2', sm: 'h6' },
                             }}
                         >
                             {category}
@@ -78,155 +90,50 @@ export default function ListCategoryDashboard() {
                 ))}
             </Box>
 
-            {/* Dropdown for mobile view */}
-            <Box sx={{ display: { xs: 'block', sm: 'none' }, marginBottom: 2 }}>
-                <TextField
-                    select
-                    label="Category"
-                    value={activeCategory || ''}
-                    onChange={handleCategoryChange}
-                    fullWidth
+            {/* Subcategories */}
+            {activeCategory && subcategories.length > 0 && (
+                <Box
                     sx={{
-                        '& .MuiInputLabel-root': { color: primary[100] },
-                        '& .MuiOutlinedInput-root': {
-                            '& fieldset': { borderColor: primary[100] },
-                            '&:hover fieldset': { borderColor: primary[100] },
-                            '&.Mui-focused fieldset': { borderColor: primary[100] },
-                        },
-                        '& .MuiSelect-icon': { color: primary[100] },
-                        '& .MuiSelect-select': { color: primary[100] },
+                        display: 'flex',
+                        gap: 2,
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
                     }}
                 >
-                    {categories.map((category) => (
-                        <MenuItem
-                            key={category}
-                            value={category}
+                    {subcategories.map((subcategory) => (
+                        <Paper
+                            key={subcategory}
+                            onClick={() => handleSubCategoryClick(activeCategory, subcategory)} // Menambahkan kategori ke parameter
                             sx={{
-                                backgroundColor: dark[600],
-                                '&.Mui-selected': {
-                                    backgroundColor: primary[100],
-                                    color: dark[600],
-                                },
-                                '&.Mui-selected:hover': {
-                                    backgroundColor: primary[100],
-                                    color: dark[600],
+                                padding: 2,
+                                minWidth: '120px',
+                                borderRadius: 5,
+                                cursor: 'pointer',
+                                backgroundColor: activeSubCategory === subcategory ? primary[100] : dark[600],
+                                '&:hover': {
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
                                 },
                             }}
                         >
-                            {category}
-                        </MenuItem>
-                    ))}
-                </TextField>
-            </Box>
-
-            {/* Subcategories (desktop view) */}
-            <Box
-                sx={{
-                    display: { xs: 'none', sm: 'flex' },
-                    overflowX: 'auto',
-                    gap: 2,
-                    paddingBottom: 2,
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
-                }}
-            >
-                {subcategories.map((subcategory) => (
-                    <Paper
-                        key={subcategory}
-                        onClick={() => handleSubCategoryClick(subcategory)}
-                        sx={{
-                            padding: 2,
-                            paddingTop: 1,
-                            paddingBottom: 1,
-                            minWidth: '120px',
-                            borderRadius: 5,
-                            cursor: 'pointer',
-                            textAlign: 'center',
-                            backgroundColor: activeSubCategory === subcategory ? primary[100] : dark[600],
-                            transition: 'all 0.3s',
-                            '&:hover': {
-                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                            },
-                        }}
-                    >
-                        <Typography
-                            variant="subtitle1"
-                            sx={{
-                                fontWeight: 'bold',
-                                color: activeSubCategory === subcategory ? light[100] : dark[500],
-                                fontSize: { xs: 'body2', sm: 'subtitle1' }, // Responsive font size
-                            }}
-                        >
-                            {subcategory}
-                        </Typography>
-                    </Paper>
-                ))}
-            </Box>
-
-            {/* Dropdown for subcategories on mobile view */}
-            {activeCategory && (
-                <Box sx={{ display: { xs: 'block', sm: 'none' }, marginBottom: 2 }}>
-                    <TextField
-                        select
-                        label="Subcategory"
-                        value={activeSubCategory || ''}
-                        onChange={handleSubCategoryChange}
-                        fullWidth
-                        sx={{
-                            '& .MuiInputLabel-root': { color: primary[100] },
-                            '& .MuiOutlinedInput-root': {
-                                '& fieldset': { borderColor: primary[100] },
-                                '&:hover fieldset': { borderColor: primary[100] },
-                                '&.Mui-focused fieldset': { borderColor: primary[100] }, // This is correct
-                            },
-                            '& .MuiSelect-icon': { color: primary[100] },
-                        }}
-                    >
-                        {subcategories.map((subcategory) => (
-                            <MenuItem
-                                key={subcategory}
-                                value={subcategory}
+                            <Typography
+                                variant="subtitle1"
                                 sx={{
-                                    backgroundColor: dark[600],
-                                    '&.Mui-selected': {
-                                        backgroundColor: primary[100],
-                                        color: dark[600],
-                                    },
-                                    '&.Mui-selected:hover': {
-                                        backgroundColor: primary[100],
-                                        color: dark[600],
-                                    },
+                                    fontWeight: 'bold',
+                                    color: activeSubCategory === subcategory ? light[100] : dark[500],
                                 }}
                             >
                                 {subcategory}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                            </Typography>
+                        </Paper>
+                    ))}
                 </Box>
-
             )}
 
-            {/* Text below subcategories */}
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginY: 2,
-                    paddingX: 2,
-                    textAlign: { xs: 'center', sm: 'left' },
-                }}
-            >
-                <Typography sx={{ fontWeight: 'bold', fontSize: { xs: 20, sm: 28 } }}>
-                    {activeCategory
-                        ? `Category: ${activeCategory} ${activeSubCategory ? `| Subcategory: ${activeSubCategory}` : ''}`
-                        : "Select a Category"}
-                </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: { xs: 16, sm: 20 } }}>
-                    {`Items: ${itemCount}`}
-                </Typography>
-            </Box>
+            {/* Display Produk */}
+             {/* Tampilkan produk sesuai kategori dan subkategori */}
+             {activeCategory && activeSubCategory && (
+                <ListProductDashboard category={activeCategory} subCategory={activeSubCategory} />
+            )}
         </>
     );
 }

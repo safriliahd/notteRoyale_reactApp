@@ -14,8 +14,7 @@ const columns = [
   { id: 'price', label: 'Price', minWidth: 100, align: 'right' },
   { id: 'categoryMain', label: 'Category', minWidth: 170 },
   { id: 'categorySub', label: 'Subcategory', minWidth: 170 },
-  // { id: 'description', label: 'Description', minWidth: 170 },
-  { id: 'averageRating', label: 'Average Rating', minWidth: 170, align: 'right' },
+  { id: 'averageRating', label: 'Average Rating', minWidth: 170, align: 'center' },
 ];
 
 export default function ProductListData() {

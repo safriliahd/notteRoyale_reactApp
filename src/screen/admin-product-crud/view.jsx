@@ -28,11 +28,11 @@ const CreateProduct = () => {
   const [subcategories, setSubcategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const mainCategories = ['food', 'drink', 'dessert'];
+  const mainCategories = ['Food', 'Drink', 'Dessert'];
   const validSubcategories = {
-    food: ['Indonesian Food', 'Korean Food', 'Italian Food', 'Japanese Food', 'Chinese Food', 'American Food'],
-    drink: ['Cold', 'Hot'],
-    dessert: ['Cold', 'Hot'],
+    Food: ['Indonesian Food', 'Korean Food', 'Italian Food', 'Japanese Food', 'Chinese Food', 'American Food'],
+    Drink: ['Cold', 'Hot'],
+    Dessert: ['Cold', 'Hot'],
   };
 
   const navigate = useNavigate(); // Hook navigate

@@ -27,9 +27,9 @@ const Column = styled(Box)(({ theme }) => ({
   overflow: "hidden",
 }));
 
-const validCategories = ["food", "drink", "dessert"];
+const validCategories = ["Food", "Drink", "Dessert"];
 const validSubcategories = {
-  food: [
+  Food: [
     "Indonesian Food",
     "Korean Food",
     "Italian Food",
@@ -37,15 +37,15 @@ const validSubcategories = {
     "Chinese Food",
     "American Food",
   ],
-  drink: ["Cold", "Hot"],
-  dessert: ["Cold", "Hot"],
+  Drink: ["Cold", "Hot"],
+  Dessert: ["Cold", "Hot"],
 };
 
 export default function DataProductCRUD() {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
-    category: "food",
+    category: "Food",
     subcategory: "Indonesian Food",
     description: "",
     image: null,
