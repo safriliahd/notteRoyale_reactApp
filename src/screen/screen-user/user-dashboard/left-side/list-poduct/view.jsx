@@ -25,7 +25,7 @@ export default function ListProductDashboard({ category, subCategory }) {
           setLoading(false); // Set loading false setelah data diterima
       } catch (error) {
           console.error("Error fetching products:", error.message);
-          setError("Gagal memuat produk."); // Menangani error
+          // setError("Gagal memuat produk."); // Menangani error
           setLoading(false); // Set loading false jika error
       }
   };
