@@ -6,7 +6,7 @@ import ListProductDashboard from "../list-poduct/view";
 
 // Subkategori berdasarkan kategori
 const subcategoriesMap = {
-    Food: ["Indonesian Food", "Italian", "Korean", "American", "Chinese", "Japanese"],
+    Food: ["Indonesian Food", "Italian Food", "Korean Food", "American Food", "Chinese Food", "Japanese Food"],
     Drink: ["Hot", "Cold"],
     Dessert: ["Hot", "Cold"],
 };
