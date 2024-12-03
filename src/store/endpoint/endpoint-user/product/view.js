@@ -20,12 +20,22 @@ export const getProductsByCategory = async (category, subCategory) => {
 export const getProductById = async (id) => {
   try {
     const token = localStorage.getItem('token'); // Mengambil token
-    const response = await httpClient.get(`/products/${id}`, {
+    const response = await httpClient.get(`/user/products/detail/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data; // Mengembalikan data produk
+    const { id: productId, name, price, category, description, photo, averageRating, ratings } = response.data;
+    return {
+      productId,
+      name,
+      price,
+      category: `${category.main} - ${category.sub}`,
+      description,
+      photo,
+      averageRating,
+      ratings,
+    };
   } catch (error) {
     throw new Error(
       error.response ? error.response.data.message : 'Failed to fetch product details'

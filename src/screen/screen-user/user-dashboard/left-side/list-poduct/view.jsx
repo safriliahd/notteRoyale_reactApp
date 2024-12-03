@@ -10,28 +10,29 @@ export default function ListProductDashboard({ category, subCategory }) {
 
   const navigate = useNavigate();
 
+  // Fungsi untuk navigasi ke halaman detail produk
   const handleCardClick = (id) => {
-    navigate(`/product/${id}`); // Navigate ke halaman detail produk
+    navigate(`/product/${id}`); // Navigasi berdasarkan ID produk
   };
 
+  // Mengambil data produk berdasarkan kategori dan subkategori
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true); // Set loading true sebelum fetch data
       try {
-          console.log("Fetching products with:", { category, subCategory });
-          const data = await getProductsByCategory(category, subCategory);
-          console.log("Fetched data:", data);
-          setProducts(data); // Simpan data produk
-          setLoading(false); // Set loading false setelah data diterima
+        console.log("Fetching products with:", { category, subCategory });
+        const data = await getProductsByCategory(category, subCategory);
+        console.log("Fetched data:", data);
+        setProducts(data); // Simpan data produk ke state
+        setLoading(false); // Set loading false setelah data diterima
       } catch (error) {
-          console.error("Error fetching products:", error.message);
-          // setError("Gagal memuat produk."); // Menangani error
-          setLoading(false); // Set loading false jika error
+        console.error("Error fetching products:", error.message);
+        setLoading(false); // Set loading false jika error
       }
-  };
+    };
 
     fetchProducts(); // Panggil fungsi fetch saat kategori atau subkategori berubah
-  }, [category, subCategory]); // Dependency array, akan dipanggil setiap kategori atau subkategori berubah
+  }, [category, subCategory]);
 
   return (
     <Box sx={{ marginTop: 5, padding: 0 }}>
@@ -43,6 +44,10 @@ export default function ListProductDashboard({ category, subCategory }) {
         <Box sx={{ textAlign: "center", marginTop: 5, color: "red" }}>
           <Typography variant="h6">{error}</Typography>
         </Box>
+      ) : products.length === 0 ? ( // Jika produk kosong
+        <Box sx={{ textAlign: "center", marginTop: 5 }}>
+          <Typography variant="h6">Produk tidak ditemukan.</Typography>
+        </Box>
       ) : (
         <Grid
           container
@@ -52,7 +57,7 @@ export default function ListProductDashboard({ category, subCategory }) {
         >
           {products.map((product) => (
             <Grid
-              key={product.id}
+              key={product._id} // Pastikan menggunakan _id dari database
               item
               xs={4}
               sm={8}
@@ -68,18 +73,16 @@ export default function ListProductDashboard({ category, subCategory }) {
                   alignItems: "stretch",
                   cursor: "pointer",
                 }}
-                onClick={() => handleCardClick(product.id)}
+                onClick={() => handleCardClick(product._id)} // Navigasi menggunakan _id
               >
                 <Card sx={{ flex: 1, borderRadius: 5 }}>
                   <CardMedia
                     component="img"
                     image={product.photo || "/placeholder.jpg"} // Placeholder jika foto kosong
                     alt={product.name}
-                    sx={{ height: 300 }}
+                    sx={{ height: 250 }}
                   />
-                  <CardContent
-                    sx={{ textAlign: "center", paddingBottom: 0 }}
-                  >
+                  <CardContent sx={{ textAlign: "center", paddingBottom: 0 }}>
                     <Typography
                       gutterBottom
                       component="div"
@@ -90,15 +93,11 @@ export default function ListProductDashboard({ category, subCategory }) {
                     >
                       {product.name}
                     </Typography>
-                    <Typography
-                      sx={{ color: "text.secondary", fontSize: 18 }}
-                    >
+                    <Typography sx={{ color: "text.secondary", fontSize: 18 }}>
                       Rp {product.price.toLocaleString("id-ID")}
                     </Typography>
-                    <Typography
-                      sx={{ color: "text.secondary", fontSize: 14 }}
-                    >
-                      Rating: {product.rating}
+                    <Typography sx={{ color: "text.secondary", fontSize: 14 }}>
+                      Rating: {product.averageRating || "Belum ada"}
                     </Typography>
                   </CardContent>
                 </Card>
