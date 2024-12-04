@@ -1,96 +1,80 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Box, Card, CardMedia, Grid, Paper, Button, Typography } from "@mui/material";
-import { primary } from '../../../../theme/color';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import StarIcon from '@mui/icons-material/Star';
-import { getProductById } from '../../../../store/endpoint/endpoint-user/product/view';
+import { getProductById } from "../../../../store/endpoint/endpoint-user/product/view"; // Sesuaikan dengan path Anda
 
-export default function LeftSideProductDetail() {
-    const { id } = useParams(); // Mendapatkan ID dari URL
-    const [product, setProduct] = useState(null);
-    const [error, setError] = useState(null);
+export default function LeftSideProductDetail({ setProduct }) {
+    const { id } = useParams(); // Mengambil ID produk dari parameter URL
+    const [product, setLocalProduct] = useState(null); // State untuk menyimpan detail produk lokal
+    const [error, setError] = useState(null); // State untuk menangani pesan error jika ada
 
+    // Fetch data produk berdasarkan ID
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const productData = await getProductById(id);
-                setProduct({ ...productData, averageRating: productData.averageRating || 0 }); // Tambahkan fallback untuk averageRating
+                const processedProduct = {
+                    ...productData,
+                    averageRating: productData.averageRating || 0, // Default rating jika tidak ada
+                };
+                setLocalProduct(processedProduct); // Menyimpan data lokal
+                setProduct(processedProduct); // Meneruskan data ke komponen induk
             } catch (err) {
-                setError(err.message);
+                setError(err.message); // Menangkap error jika ada
             }
         };
-
         fetchProduct();
-    }, [id]);
+    }, [id, setProduct]);
 
+    // Tampilkan pesan error jika terjadi kesalahan
     if (error) {
-        return <Typography variant="h6" color="error">{error}</Typography>;
+        return (
+            <Typography variant="h6" color="error">
+                {error}
+            </Typography>
+        );
     }
 
+    // Tampilkan loading jika data belum tersedia
     if (!product) {
         return <Typography variant="h6">Loading...</Typography>;
     }
 
-    // Validasi averageRating
-    const averageRating = Math.max(0, Math.round(product.averageRating || 0));
-
+    // Tampilkan detail produk jika data sudah tersedia
     return (
-        <Box sx={{ marginTop: 5, padding: 0 }}>
-            <Grid container spacing={3} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingLeft: 0 }}>
-                <Grid item xs={4} sm={8} md={6} sx={{ mb: { xs: 5, sm: 0 } }}>
-                    <Paper sx={{ height: "100%", paddingTop: 0, boxShadow: "none" }}>
-                        <Card sx={{ flex: 1, width: "100%" }}>
-                            <CardMedia
-                                component="img"
-                                image={product.photo || "default.jpg"} // Fallback untuk gambar
-                                alt={product.name}
-                                sx={{ height: 400 }}
-                            />
-                        </Card>
-                        <Box sx={{
-                            border: '1px solid #ccc',
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                            padding: 3,
-                            marginTop: 10,
-                            borderRadius: '15px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            <LocationOnIcon sx={{ color: 'red', fontSize: '50px', marginRight: 2 }} />
-                            <Typography variant="h6" sx={{ marginRight: 8 }}>Malang, INA</Typography>
-                            <Button
-                                variant="outlined"
-                                sx={{
-                                    borderColor: primary[100],
-                                    color: primary[100],
-                                    borderRadius: '15px',
-                                    padding: '8px 16px'
-                                }}
-                            >
-                                View Location
-                            </Button>
-                        </Box>
-                    </Paper>
-                </Grid>
-                <Grid item xs={4} sm={8} md={6} sx={{ mb: { xs: 2, sm: 0 } }}>
-                    <Paper sx={{ paddingTop: 0, boxShadow: "none" }}>
-                        <Box sx={{ paddingInlineStart: 2, paddingInlineEnd: 2 }}>
-                            <h1>{product.name}</h1>
-                            {[...Array(averageRating)].map((_, i) => (
-                                <StarIcon key={i} sx={{ color: primary[100] }} />
-                            ))}
-                            <h3>Price: Rp {product.price}</h3>
-                            <h3>Category: {product.category}</h3>
-                            <Box sx={{ marginBottom: 2 }}>
-                                <Typography>Description</Typography>
-                                <Typography>{product.description}</Typography>
-                            </Box>
-                        </Box>
-                    </Paper>
-                </Grid>
-            </Grid>
+        <Box sx={{ padding: 2, maxWidth: 800, margin: "auto", display: "flex", gap: 3 }}>
+            {/* Gambar Produk */}
+            <Box sx={{ flex: "1 1 50%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <img
+                    src={product.photo || "https://via.placeholder.com/400"}
+                    alt={product.name}
+                    style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        borderRadius: 8,
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    }}
+                />
+            </Box>
+
+            {/* Detail Produk */}
+            <Box sx={{ flex: "1 1 50%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <Typography variant="h5" gutterBottom>
+                    {product.name}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    <strong>Category:</strong> {product.category}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    <strong>Price:</strong> Rp {product.price.toLocaleString("id-ID")}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    <strong>Rating:</strong> {product.averageRating}/5
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                    <strong>Description:</strong> {product.description}
+                </Typography>
+            </Box>
         </Box>
     );
 }
