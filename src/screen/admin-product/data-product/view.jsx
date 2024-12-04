@@ -19,19 +19,19 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-import { primary } from '../../../theme/color'
+import { dark, primary } from '../../../theme/color'
 
 import { listProduct } from '../../../store/endpoint/product/list-product/view';
 import { deleteProduct } from '../../../store/endpoint/product/delete-product/view';
 import { updateProduct } from '../../../store/endpoint/product/update-product/view';
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 250, align: 'right' },
-  { id: 'price', label: 'Price', minWidth: 100, align: 'right' },
-  { id: 'mainCategory', label: 'Category', minWidth: 170, align: 'right' },
-  { id: 'subCategory', label: 'Subcategory', minWidth: 170, align: 'right' },
-  { id: 'averageRating', label: 'Average Rating', minWidth: 170, align: 'right' },
-  { id: 'action', label: 'Action', minWidth: 100, align: 'right' },
+  { id: 'name', label: 'Name', minWidth: 250, align: 'center' },
+  { id: 'price', label: 'Price', minWidth: 100, align: 'center' },
+  { id: 'mainCategory', label: 'Category', minWidth: 170, align: 'center' },
+  { id: 'subCategory', label: 'Subcategory', minWidth: 170, align: 'center' },
+  { id: 'averageRating', label: 'Average Rating', minWidth: 170, align: 'center' },
+  { id: 'action', label: 'Action', minWidth: 100, align: 'center' },
 ];
 
 const mainCategories = ['Food', 'Drink', 'Dessert'];
@@ -49,6 +49,10 @@ export default function ProductListData() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
+
+  // State untuk filter kategori dan subkategori
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -172,69 +176,149 @@ export default function ProductListData() {
     setSelectedProduct(null);
   };
 
+  // Filter produk berdasarkan kategori dan subkategori
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory =
+      selectedCategory === '' || product.category.main === selectedCategory;
+    const matchesSubcategory =
+      selectedSubcategory === '' || product.category.sub === selectedSubcategory;
+    return matchesCategory && matchesSubcategory;
+  });
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 2 }}>
+      {/* Filter */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'flex-start',
+          marginBottom: 2,
+          marginLeft: 2,
+          maxWidth: 600,
+          gap: 2,
+        }}
+      >
+        <TextField
+          select
+          label="Main Category"
+          value={selectedCategory}
+          onChange={(e) => {
+            setSelectedCategory(e.target.value);
+            setSelectedSubcategory(''); // Reset subcategory ketika kategori utama berubah
+          }}
+          fullWidth
+          margin="dense"
+          variant="standard"
+        >
+          <MenuItem value="">All Categories</MenuItem>
+          {mainCategories.map((category) => (
+            <MenuItem key={category} value={category}>
+              {category}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          select
+          label="Subcategory"
+          value={selectedSubcategory}
+          onChange={(e) => setSelectedSubcategory(e.target.value)}
+          fullWidth
+          margin="dense"
+          variant="standard"
+          disabled={!selectedCategory}
+        >
+          <MenuItem value="">All Subcategories</MenuItem>
+          {validSubcategories[selectedCategory]?.map((subcategory) => (
+            <MenuItem key={subcategory} value={subcategory}>
+              {subcategory}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
+
+
+
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow >
+            <TableRow>
               {columns.map((column) => (
-                <TableCell key={column.id} align="center">
+                <TableCell
+                  key={column.id}
+                  align="center"
+                  sx={{
+                    fontWeight: 'bold', // Membuat teks bold
+                    borderBottom: '2px solid', // Garis bawah tebal
+                    borderBottomColor: dark[300],
+                  }}
+                >
                   {column.label}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {products
+            {filteredProducts
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                  {columns.map((column) => {
-                    let value = row[column.id];
+                  <TableCell align="center">{row.name}</TableCell>
+                  <TableCell align="center">{row.price}</TableCell>
+                  <TableCell align="center">{row.category.main}</TableCell>
+                  <TableCell align="center">{row.category.sub}</TableCell>
+                  <TableCell align="center">
+                    {calculateAverageRating(row.ratings)}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        color:  primary[100], // Warna teks dan ikon
+                        borderColor:  primary[100], // Warna border tombol
+                        '&:hover': {
+                          borderColor:  primary[100] , // Warna border saat hover
+                          backgroundColor: 'rgba(255, 255, 0, 0.1)', // Background warna kuning transparan saat hover
+                        },
+                      }}
+                      size="small"
+                      onClick={() => handleEdit(row)}
+                    >
+                      <EditIcon sx={{ color: primary[100] }} /> {/* Mengubah warna ikon Edit */}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      size="small"
+                      onClick={() => handleDelete(row._id)}
+                      sx={{ ml: 1 }} // Memberikan margin kiri untuk jarak
+                    >
+                      <DeleteIcon />
+                    </Button>
+                  </TableCell>
 
-                    if (column.id === 'mainCategory') {
-                      value = row.category.main;
-                    } else if (column.id === 'subCategory') {
-                      value = row.category.sub;
-                    } else if (column.id === 'averageRating') {
-                      value = calculateAverageRating(row.ratings);
-                    } else if (column.id === 'action') {
-                      value = (
-                        <>
-                          <DeleteIcon
-                            sx={{ cursor: 'pointer', color: 'red', marginRight: 1 }}
-                            onClick={() => handleDelete(row._id)}
-                          />
-                          <EditIcon
-                            sx={{ cursor: 'pointer', color: 'blue' }}
-                            onClick={() => handleEdit(row)}
-                          />
-                        </>
-                      );
-                    }
-
-                    return <TableCell key={column.id} align='center'>{value}</TableCell>;
-                  })}
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </TableContainer>
+
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={products.length}
+        count={filteredProducts.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
 
+      {/* Modal Edit Produk */}
       {/* Edit Modal */}
       {selectedProduct && (
         <Modal
