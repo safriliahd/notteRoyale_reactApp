@@ -49,7 +49,7 @@ const closedMixin = (theme) => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width:`calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
@@ -102,9 +102,9 @@ export default function SidebarUser({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const [userInitials, setUserInitials] = React.useState('YN'); // default initials
+  const [userInitials, setUserInitials] = React.useState('YN'); 
   const [profilePic, setProfilePic] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null); // Dropdown anchor
+  const [anchorEl, setAnchorEl] = React.useState(null); 
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -214,62 +214,60 @@ export default function SidebarUser({ children }) {
         <Divider />
         <List>
           {[{ text: 'Dashboard', path: '/user-dashboard' },
-            { text: 'Table', path: '/table' },
-            { text: 'My Order', path: '/my-order' }].map((item, index) => (
-              <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  component={Link}
-                  to={item.path}
-                  onClick={() => handleListItemClick(index)}
+          { text: 'My Order', path: '/my-order' }].map((item, index) => (
+            <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                component={Link}
+                to={item.path}
+                onClick={() => handleListItemClick(index)}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  backgroundColor: activeIndex === index ? primary[100] : 'transparent',
+                  '&:hover': {
+                    backgroundColor: dark[100],
+                    color: primary[100],
+                  },
+                }}
+              >
+                <ListItemIcon
                   sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                    backgroundColor: activeIndex === index ? primary[100] : 'transparent',
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                    color: activeIndex === index ? light[100] : primary[100],
                     '&:hover': {
-                      backgroundColor: dark[100],
                       color: primary[100],
                     },
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                      color: activeIndex === index ? light[100] : primary[100],
-                      '&:hover': {
-                        color: primary[100],
-                      },
-                    }}
-                  >
-                    {(() => {
-                      switch (index) {
-                        case 0:
-                          return <DashboardIcon />;
-                        case 1:
-                          return <TableRestaurantIcon />;
-                        case 2:
-                          return <AssignmentIcon />;
-                        default:
-                          return null;
-                      }
-                    })()}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.text}
-                    sx={{
-                      opacity: open ? 1 : 0,
-                      color: activeIndex === index ? light[100] : primary[100],
-                      '&:hover': {
-                        color: primary[100],
-                      },
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
+                  {(() => {
+                    switch (index) {
+                      case 0:
+                        return <DashboardIcon />;
+                      case 1:
+                        return <AssignmentIcon />;
+                      default:
+                        return null;
+                    }
+                  })()}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    opacity: open ? 1 : 0,
+                    color: activeIndex === index ? light[100] : primary[100],
+                    '&:hover': {
+                      color: primary[100],
+                    },
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
+
         <Box sx={{ flexGrow: 1 }} />
         <Divider />
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2 }}>

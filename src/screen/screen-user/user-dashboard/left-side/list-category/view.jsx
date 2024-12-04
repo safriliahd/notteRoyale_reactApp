@@ -60,6 +60,8 @@ export default function ListCategoryDashboard() {
                     justifyContent: 'space-between',
                     textAlign: 'center',
                     marginBottom: 4,
+                    marginLeft: 4,
+                    marginRight: 4,
                 }}
             >
                 {categories.map((category) => (
@@ -75,6 +77,9 @@ export default function ListCategoryDashboard() {
                             '&:hover': {
                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
                             },
+                            flexGrow: 1,
+                            minWidth: 270, 
+                            maxWidth: 270, 
                         }}
                     >
                         <Typography
@@ -103,7 +108,7 @@ export default function ListCategoryDashboard() {
                     {subcategories.map((subcategory) => (
                         <Paper
                             key={subcategory}
-                            onClick={() => handleSubCategoryClick(activeCategory, subcategory)} // Menambahkan kategori ke parameter
+                            onClick={() => handleSubCategoryClick(activeCategory, subcategory)} 
                             sx={{
                                 padding: 2,
                                 minWidth: '120px',
@@ -130,8 +135,8 @@ export default function ListCategoryDashboard() {
             )}
 
             {/* Display Produk */}
-             {/* Tampilkan produk sesuai kategori dan subkategori */}
-             {activeCategory && activeSubCategory && (
+            {/* Tampilkan produk sesuai kategori dan subkategori */}
+            {activeCategory && activeSubCategory && (
                 <ListProductDashboard category={activeCategory} subCategory={activeSubCategory} />
             )}
         </>
