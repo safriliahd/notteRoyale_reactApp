@@ -9,10 +9,10 @@ import {
     Typography,
     Collapse,
     IconButton,
+    Divider,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { primary } from "../../../theme/color";
-
+import { dark, primary } from "../../../theme/color";
 
 export default function OrderUser() {
     const [selectedTab, setSelectedTab] = useState(0);
@@ -61,8 +61,10 @@ export default function OrderUser() {
     return (
         <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
             <Typography align="center" gutterBottom sx={{
-                fontSize: 28,
+                fontSize: 32,
                 fontWeight: 'bold',
+                color: dark[300],
+                mb: 3
             }}>
                 My Orders
             </Typography>
@@ -73,22 +75,26 @@ export default function OrderUser() {
                 onChange={handleChangeTab}
                 centered
                 TabIndicatorProps={{ style: { backgroundColor: primary[100] } }}
+                sx={{
+                    "& .MuiTab-root": {
+                        textTransform: "none",
+                        fontSize: 22,
+                        fontWeight: 600,
+                        color: "#888",  // default color for inactive tabs
+                    },
+                    "& .Mui-selected": {
+                        color: primary[100],  // color when the tab is selected
+                    },
+                }}
             >
                 <Tab
                     label="On-Process"
-                    sx={{
-                        color: selectedTab === 0 ? "#000" : "#888",
-                        borderRadius: 2,
-                    }}
                 />
                 <Tab
                     label="Completed"
-                    sx={{
-                        color: selectedTab === 1 ? "#000" : "#888",
-                        borderRadius: 2,
-                    }}
                 />
             </Tabs>
+
 
             {/* Konten berdasarkan kategori */}
             <Box sx={{ mt: 2 }}>
@@ -114,15 +120,24 @@ function OrderList({ orders }) {
                     key={index}
                     sx={{
                         mb: 2,
-                        border: "1px solid #ccc",
                         borderRadius: 2,
-                        padding: 1,
+                        padding: 2,
+                        backgroundColor: "#fff",
+                        boxShadow: 3, // Bayangan kotak
+                        transition: "all 0.3s ease",
+                        ":hover": {
+                            boxShadow: 6, // Bayangan lebih besar saat hover
+                        },
                     }}
                 >
                     <ListItem
                         button
                         onClick={() => handleToggle(index)}
-                        sx={{ display: "flex", justifyContent: "space-between" }}
+                        sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            padding: 0,
+                        }}
                     >
                         {/* Sebelah kiri: No Order & No Tabel */}
                         <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
@@ -186,7 +201,7 @@ function OrderList({ orders }) {
 
                     {/* Detail Order */}
                     <Collapse in={expanded === index} timeout="auto" unmountOnExit>
-                        <Box sx={{ pl: 4, pb: 2, marginRight: 4 }}>
+                        <Box sx={{ pl: 4, pb: 2 }}>
                             {order.details.map((detail, idx) => (
                                 <Box
                                     key={idx}
@@ -226,4 +241,3 @@ function OrderList({ orders }) {
         </List>
     );
 }
-

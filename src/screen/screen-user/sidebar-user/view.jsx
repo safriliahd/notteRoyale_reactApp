@@ -102,9 +102,9 @@ export default function SidebarUser({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const [userInitials, setUserInitials] = React.useState('YN'); 
+  const [userInitials, setUserInitials] = React.useState('YN');
   const [profilePic, setProfilePic] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null); 
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -311,6 +311,14 @@ export default function SidebarUser({ children }) {
               'aria-labelledby': 'basic-button',
             }}
           >
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate('/profile'); // Navigate to profile page
+              }}
+            >
+              Profile
+            </MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Box>

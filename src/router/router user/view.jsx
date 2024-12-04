@@ -5,6 +5,7 @@ import TableUser from '../../screen/screen-user/user-table/view';
 import OrderUser from '../../screen/screen-user/user-order/view';
 // import LeftSideProductDetail from '../../screen/screen-user/user-product/left-side/view';
 import PageUserProduct from '../../screen/screen-user/user-product/view';
+import PageProfile from '../../screen/profile-page/view';
 
 export default function RouterUser() {
     return (
@@ -15,6 +16,7 @@ export default function RouterUser() {
                 <Route path='/table' element={<TableUser />} />
                 <Route path='/my-order' element={<OrderUser />} />
                 <Route path='/product/:id' element={<PageUserProduct />} />
+                <Route path='/profile' element={<PageProfile />} />
             </Routes>
         </SidebarUser>
         </>
