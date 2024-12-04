@@ -19,17 +19,19 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import { primary } from '../../../theme/color'
+
 import { listProduct } from '../../../store/endpoint/product/list-product/view';
 import { deleteProduct } from '../../../store/endpoint/product/delete-product/view';
 import { updateProduct } from '../../../store/endpoint/product/update-product/view';
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
+  { id: 'name', label: 'Name', minWidth: 250, align: 'right' },
   { id: 'price', label: 'Price', minWidth: 100, align: 'right' },
-  { id: 'mainCategory', label: 'Category', minWidth: 170 },
-  { id: 'subCategory', label: 'Subcategory', minWidth: 170 },
-  { id: 'averageRating', label: 'Average Rating', minWidth: 170, align: 'center' },
-  { id: 'action', label: 'Action', minWidth: 100, align: 'center' },
+  { id: 'mainCategory', label: 'Category', minWidth: 170, align: 'right' },
+  { id: 'subCategory', label: 'Subcategory', minWidth: 170, align: 'right' },
+  { id: 'averageRating', label: 'Average Rating', minWidth: 170, align: 'right' },
+  { id: 'action', label: 'Action', minWidth: 100, align: 'right' },
 ];
 
 const mainCategories = ['Food', 'Drink', 'Dessert'];
@@ -100,25 +102,50 @@ export default function ProductListData() {
   };
 
   const handleUpdate = async () => {
+    if (
+      !selectedProduct.name ||
+      !selectedProduct.price ||
+      !selectedProduct.mainCategory
+    ) {
+      alert('Please fill in all required fields.');
+      return;
+    }
 
-    // if (!selectedProduct.name || !selectedProduct.price || !selectedProduct.mainCategory || !selectedProduct.subCategory) {
-    //   alert('Please fill in all fields.');
-    //   return;
-    // }
-    
+    if (!mainCategories.includes(selectedProduct.mainCategory)) {
+      alert('Invalid main category.');
+      return;
+    }
+
+    if (
+      selectedProduct.subCategory &&
+      !validSubcategories[selectedProduct.mainCategory].includes(
+        selectedProduct.subCategory
+      )
+    ) {
+      alert('Invalid subcategory for the selected main category.');
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append('name', selectedProduct.name);
       formData.append('price', selectedProduct.price);
       formData.append('category[main]', selectedProduct.mainCategory);
-      formData.append('category[sub]', selectedProduct.subCategory);
+      formData.append('category[sub]', selectedProduct.subCategory || '');
       formData.append('description', selectedProduct.description);
       if (selectedProduct.imageFile) {
-        formData.append('image', selectedProduct.imageFile);
+        formData.append('photo', selectedProduct.imageFile);
       }
 
       await updateProduct(selectedProduct._id, formData);
       alert('Product updated successfully.');
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product._id === selectedProduct._id
+            ? { ...product, ...selectedProduct }
+            : product
+        )
+      );
       setOpenEditModal(false);
     } catch (error) {
       console.error('Error updating product:', error);
@@ -136,7 +163,7 @@ export default function ProductListData() {
 
     if (name === 'mainCategory') {
       setSubcategories(validSubcategories[value] || []);
-      setSelectedProduct({ ...selectedProduct, subCategory: '' });
+      setSelectedProduct((prev) => ({ ...prev, subCategory: '' }));
     }
   };
 
@@ -154,45 +181,47 @@ export default function ProductListData() {
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow>
+            <TableRow >
               {columns.map((column) => (
-                <TableCell key={column.id} align={column.align || 'center'}>
+                <TableCell key={column.id} align="center">
                   {column.label}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-              <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
-                {columns.map((column) => {
-                  let value = row[column.id];
+            {products
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                  {columns.map((column) => {
+                    let value = row[column.id];
 
-                  if (column.id === 'mainCategory') {
-                    value = row.category.main;
-                  } else if (column.id === 'subCategory') {
-                    value = row.category.sub;
-                  } else if (column.id === 'averageRating') {
-                    value = calculateAverageRating(row.ratings);
-                  } else if (column.id === 'action') {
-                    value = (
-                      <>
-                        <DeleteIcon
-                          sx={{ cursor: 'pointer', color: 'red', marginRight: 1 }}
-                          onClick={() => handleDelete(row._id)}
-                        />
-                        <EditIcon
-                          sx={{ cursor: 'pointer', color: 'blue' }}
-                          onClick={() => handleEdit(row)}
-                        />
-                      </>
-                    );
-                  }
+                    if (column.id === 'mainCategory') {
+                      value = row.category.main;
+                    } else if (column.id === 'subCategory') {
+                      value = row.category.sub;
+                    } else if (column.id === 'averageRating') {
+                      value = calculateAverageRating(row.ratings);
+                    } else if (column.id === 'action') {
+                      value = (
+                        <>
+                          <DeleteIcon
+                            sx={{ cursor: 'pointer', color: 'red', marginRight: 1 }}
+                            onClick={() => handleDelete(row._id)}
+                          />
+                          <EditIcon
+                            sx={{ cursor: 'pointer', color: 'blue' }}
+                            onClick={() => handleEdit(row)}
+                          />
+                        </>
+                      );
+                    }
 
-                  return <TableCell key={column.id}>{value}</TableCell>;
-                })}
-              </TableRow>
-            ))}
+                    return <TableCell key={column.id} align='center'>{value}</TableCell>;
+                  })}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -208,49 +237,53 @@ export default function ProductListData() {
 
       {/* Edit Modal */}
       {selectedProduct && (
-        <Modal open={openEditModal} onClose={handleCloseModal} closeAfterTransition BackdropComponent={Backdrop}>
-          <Paper sx={{ width: 600, padding: 3, margin: 'auto', top: '10%', position: 'relative' }}>
+        <Modal
+          open={openEditModal}
+          onClose={handleCloseModal}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+        >
+          <Paper
+            sx={{
+              width: 600,
+              padding: 3,
+              margin: 'auto',
+              top: '10%',
+              position: 'relative',
+            }}
+          >
             <Box display="flex" gap={2}>
               <Box flex={1}>
                 <img
                   src={selectedProduct.photo || 'fallback-image-url.jpg'}
                   alt={selectedProduct.name || 'Product Image'}
-                  style={{ width: '100%', borderRadius: 8, marginBottom: '1rem' }}
+                  style={{ width: '100%', borderRadius: 8, marginBottom: 10 }}
                 />
-                <TextField
-                  label="Description"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  name="description"
-                  value={selectedProduct.description}
-                  onChange={handleInputChange}
-                />
-                <Button variant="contained" component="label" sx={{ marginTop: 2 }}>
-                  Upload Image
-                  <input type="file" hidden accept="image/*" onChange={handleFileChange} />
-                </Button>
+                <input type="file" onChange={handleFileChange} />
               </Box>
-              <Box flex={1} display="flex" flexDirection="column" gap={2}>
+              <Box flex={1}>
                 <TextField
+                  fullWidth
+                  margin="dense"
                   label="Name"
-                  fullWidth
                   name="name"
-                  value={selectedProduct.name}
+                  value={selectedProduct.name || ''}
                   onChange={handleInputChange}
                 />
                 <TextField
-                  label="Price"
                   fullWidth
+                  margin="dense"
+                  label="Price"
                   name="price"
-                  value={selectedProduct.price}
+                  type="number"
+                  value={selectedProduct.price || ''}
                   onChange={handleInputChange}
                 />
-                <FormControl fullWidth>
+                <FormControl fullWidth margin="dense">
                   <InputLabel>Main Category</InputLabel>
                   <Select
                     name="mainCategory"
-                    value={selectedProduct.mainCategory}
+                    value={selectedProduct.mainCategory || ''}
                     onChange={handleInputChange}
                   >
                     {mainCategories.map((category) => (
@@ -260,13 +293,12 @@ export default function ProductListData() {
                     ))}
                   </Select>
                 </FormControl>
-                <FormControl fullWidth>
+                <FormControl fullWidth margin="dense" disabled={!subcategories.length}>
                   <InputLabel>Subcategory</InputLabel>
                   <Select
                     name="subCategory"
-                    value={selectedProduct.subCategory}
+                    value={selectedProduct.subCategory || ''}
                     onChange={handleInputChange}
-                    disabled={!subcategories.length}
                   >
                     {subcategories.map((subcategory) => (
                       <MenuItem key={subcategory} value={subcategory}>
@@ -275,15 +307,35 @@ export default function ProductListData() {
                     ))}
                   </Select>
                 </FormControl>
+                <TextField
+                  fullWidth
+                  margin="dense"
+                  label="Description"
+                  name="description"
+                  multiline
+                  rows={3}
+                  value={selectedProduct.description || ''}
+                  onChange={handleInputChange}
+                />
               </Box>
             </Box>
-            <Box mt={2} display="flex" justifyContent="flex-end" gap={2}>
-              <Button variant="outlined" onClick={handleCloseModal}>
+            <Box display="flex" justifyContent="space-between" mt={2}>
+              <Button color="error" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button variant="contained" onClick={handleUpdate}>
-                Save
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: primary[100],
+                  '&:hover': {
+                    backgroundColor: primary[200],
+                  },
+                }}
+                onClick={handleUpdate}
+              >
+                Save Changes
               </Button>
+
             </Box>
           </Paper>
         </Modal>
