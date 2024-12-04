@@ -32,14 +32,14 @@ export default function RightSideProduct({ product }) {
             mt: 4, mb: 4,
             display: 'flex',
             flexDirection: 'column',
-            height: "80vh",
+            minHeight: "70vh",
         }}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{fontWeight: 'bold', fontSize: 26}}>
                 Order Details
             </Typography>
             <Box sx={{ mb: 2 }}>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
-                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: 18 }}>
                         Quantity:
                     </Typography>
 
@@ -68,7 +68,7 @@ export default function RightSideProduct({ product }) {
             {/* Spacer untuk mendorong button ke bawah */}
             <Box sx={{ flexGrow: 1 }} />
 
-            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+            <Typography variant="body1" sx={{ fontWeight: 'bold',fontSize: 20 }}>
                 Sub Total: Rp. {subTotal.toLocaleString("id-ID")}
             </Typography>
 

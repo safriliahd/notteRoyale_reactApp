@@ -83,7 +83,7 @@ export default function OrderUser() {
                         color: "#888",  // default color for inactive tabs
                     },
                     "& .Mui-selected": {
-                        color: primary[100],  // color when the tab is selected
+                        color: dark[300],  // color when the tab is selected
                     },
                 }}
             >

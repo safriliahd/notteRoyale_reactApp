@@ -7,7 +7,7 @@ export default function PageUserProduct() {
     const [product, setProduct] = useState(null); // Menyimpan data produk
 
     return (
-        <Box sx={{ marginTop: 3, padding: 0 }}>
+        <Box sx={{ marginTop: 3, padding: 0,  maxHeight: '100vh',}}>
             <Grid container spacing={3} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingLeft: 0 }}>
                 {/* Left Side */}
                 <Grid item xs={4} sm={8} md={8}>
