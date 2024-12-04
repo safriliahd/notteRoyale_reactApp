@@ -101,11 +101,11 @@ export default function ProductListData() {
 
   const handleUpdate = async () => {
 
-    if (!selectedProduct.name || !selectedProduct.price || !selectedProduct.mainCategory || !selectedProduct.subCategory) {
-      alert('Please fill in all fields.');
-      return;
-    }
-
+    // if (!selectedProduct.name || !selectedProduct.price || !selectedProduct.mainCategory || !selectedProduct.subCategory) {
+    //   alert('Please fill in all fields.');
+    //   return;
+    // }
+    
     try {
       const formData = new FormData();
       formData.append('name', selectedProduct.name);
@@ -131,15 +131,12 @@ export default function ProductListData() {
   };
 
   const handleInputChange = (e) => {
-    setSelectedProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-      ...(name === 'mainCategory' && { subCategory: '' }), // Reset subCategory saat mainCategory berubah
-    }));
+    const { name, value } = e.target;
+    setSelectedProduct({ ...selectedProduct, [name]: value });
 
-    // Jika kategori utama berubah, set subcategories yang valid
     if (name === 'mainCategory') {
       setSubcategories(validSubcategories[value] || []);
+      setSelectedProduct({ ...selectedProduct, subCategory: '' });
     }
   };
 
