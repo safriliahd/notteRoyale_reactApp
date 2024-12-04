@@ -1,47 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Grid, TextField, MenuItem, Avatar, Divider } from '@mui/material';
 import { dark, light } from '../../../../theme/color';
 import BigButton from '../../../../component/button-component/fulfill-button/view';
+import { getCartList } from '../../../../store/endpoint/endpoint-user/cart/getCartList/view';
+import { getOrderNumber } from '../../../../store/endpoint/endpoint-user/order/view';
+import { getAvailableTables } from '../../../../store/endpoint/endpoint-user/table/view';
+import { createOrder } from '../../../../store/endpoint/endpoint-user/order/view';
+import { clearCart } from '../../../../store/endpoint/endpoint-user/cart/clearCart/view';
+
 
 export default function RightSideDashboard() {
-    const currencies = [
-        { value: 'vvip', label: 'A1' },
-        { value: 'vip', label: 'B1' },
-        { value: 'reguler', label: 'C1' },
-        { value: 'outdoor', label: 'D1' },
-    ];
+    const [cartProducts, setCartProducts] = useState([]);
+    const [orderNumber, setOrderNumber] = useState(null);
+    const [orderMessage, setOrderMessage] = useState('');
+    const [tables, setTables] = useState([]);
+    const [selectedTable, setSelectedTable] = useState('');
+    const [selectedTableId, setSelectedTableId] = useState(null);
 
-    // State untuk daftar produk dalam cart
-    const [cartProducts, setCartProducts] = useState([
-        {
-            id: 1,
-            name: 'Product 1',
-            price: 10000,
-            quantity: 2,
-            image: '/product1.jpg', // URL gambar produk
-        },
-        {
-            id: 2,
-            name: 'Product 2',
-            price: 15000,
-            quantity: 1,
-            image: '/product2.jpg',
-        },
-        {
-            id: 3,
-            name: 'Product 3',
-            price: 25000,
-            quantity: 1,
-            image: '/product2.jpg',
-        },
-        {
-            id: 4,
-            name: 'Product 4',
-            price: 39000,
-            quantity: 1,
-            image: '/product2.jpg',
-        },
-    ]);
+    // Fetch data on component mount
+    useEffect(() => {
+        getOrderNumber()
+            .then((data) => {
+                setOrderNumber(data.orderNumber || 'Loading...');
+                setOrderMessage(data.message || 'No message');
+            })
+            .catch((error) => {
+                console.error('Error fetching order number:', error);
+                setOrderNumber('Error');
+                setOrderMessage('Error fetching message');
+            });
+
+        getAvailableTables()
+            .then((data) => {
+                setTables(data);
+                if (data.length > 0) {
+                    setSelectedTable(data[0].tableNumber);
+                    setSelectedTableId(data[0]._id); // Menyimpan ID meja
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching available tables:', error);
+                setTables([]);
+            });
+
+            getCartList()
+            .then((data) => {
+                console.log('Cart Products:', data); // Cek data yang diterima
+                setCartProducts(data.cartItems || []);
+            })
+            .catch((error) => {
+                console.error('Error fetching cart list:', error);
+                setCartProducts([]);
+            });
+    }, []);
+
+    const calculateSubtotal = () => {
+        return cartProducts.reduce((total, product) => total + product.price * product.quantity, 0);
+    };
+
+    const handleTableChange = (event) => {
+        const selectedTableNumber = event.target.value;
+        setSelectedTable(selectedTableNumber);
+
+        const table = tables.find((t) => t.tableNumber === selectedTableNumber);
+        if (table) {
+            setSelectedTableId(table._id); // Simpan ID meja
+        }
+    };
+
+    const handleOrderNow = () => {
+        const orderData = {
+          tableId: selectedTableId, // Pastikan menggunakan ID meja yang valid
+          items: cartProducts
+            .filter((item) => item.productId) // Memastikan produk memiliki productId
+            .map((item) => ({
+              product: item.productId, // Menggunakan productId dari cartItems
+              quantity: item.quantity,   // Kuantitas tetap
+            })),
+        };
+      
+        if (orderData.items.length === 0) {
+          console.error('No valid products to order');
+          return; // Jangan lanjutkan jika tidak ada produk yang valid
+        }
+      
+        createOrder(orderData)
+          .then((data) => {
+            console.log('Order created successfully:', data);
+            clearCart(setCartProducts); // Kosongkan cart setelah pesanan berhasil
+          })
+          .catch((error) => {
+            console.error('Error creating order:', error.message);
+          });
+      };
+      
+    
+    
+    
+    
+    
+    
 
     return (
         <Container
@@ -68,7 +126,7 @@ export default function RightSideDashboard() {
                         Current Order
                     </Typography>
                     <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                        #00001
+                        #{orderMessage}
                     </Typography>
                 </Grid>
 
@@ -77,15 +135,20 @@ export default function RightSideDashboard() {
                         id="standard-select-currency"
                         select
                         label="Table"
-                        defaultValue="vvip"
+                        value={selectedTable}
+                        onChange={handleTableChange}
                         variant="standard"
                         fullWidth
                     >
-                        {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
+                        {tables.length > 0 ? (
+                            tables.map((option) => (
+                                <MenuItem key={option._id} value={option.tableNumber}>
+                                    {option.tableNumber}
+                                </MenuItem>
+                            ))
+                        ) : (
+                            <MenuItem disabled>No tables available</MenuItem>
+                        )}
                     </TextField>
                 </Grid>
             </Grid>
@@ -93,7 +156,6 @@ export default function RightSideDashboard() {
             {/* Table Notes */}
             <Box sx={{ mb: 2, backgroundColor: light[100], padding: 2, borderRadius: '8px' }}>
                 <Grid container spacing={2}>
-                    {/* Kode A & B (Kiri) */}
                     <Grid item xs={5}>
                         <Typography variant="body2" sx={{ fontWeight: 'bold', color: dark[500] }}>
                             Table Code A: VVIP
@@ -102,8 +164,6 @@ export default function RightSideDashboard() {
                             Table Code B: VIP
                         </Typography>
                     </Grid>
-
-                    {/* Kode C & D (Kanan) */}
                     <Grid item xs={7}>
                         <Typography variant="body2" sx={{ color: dark[500] }}>
                             Table Code C: Regular Indoor
@@ -115,58 +175,60 @@ export default function RightSideDashboard() {
                 </Grid>
             </Box>
 
-
             {/* List Products */}
-            <Box
-                sx={{
-                    maxHeight: '300px',
-                    overflowY: 'auto',
-                    mb: 0,
-                }}
-            >
-                {cartProducts.map((product, index) => (
-                    <Box key={product.id}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                            {/* Product Image */}
-                            <Avatar
-                                src={product.image}
-                                alt={product.name}
-                                sx={{
-                                    width: 50,
-                                    height: 50,
-                                    mr: 2,
-                                    borderRadius: '4px', // Making the corners slightly rounded
-                                    border: `1px solid ${light[400]}`,
-                                }}
-                            />
+            <Box sx={{ maxHeight: '300px', overflowY: 'auto', mb: 0 }}>
+                {cartProducts.length > 0 ? (
+                    cartProducts.map((product, index) => (
+                        <Box key={product.id}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                <Avatar
+                                    src={product.image}
+                                    alt={product.name}
+                                    sx={{
+                                        width: 50,
+                                        height: 50,
+                                        mr: 2,
+                                        borderRadius: '4px',
+                                        border: `1px solid ${light[400]}`,
+                                    }}
+                                />
 
-                            {/* Product Information */}
-                            <Box sx={{ flex: 1 }}>
-                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                    {product.name}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: dark[400] }}>
-                                    Rp {product.price.toLocaleString('id-ID')}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: dark[300] }}>
-                                    Qty: {product.quantity}
-                                </Typography>
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                        {product.name}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: dark[400] }}>
+                                        Rp {product.price.toLocaleString('id-ID')}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: dark[300] }}>
+                                        Qty: {product.quantity}
+                                    </Typography>
+                                </Box>
                             </Box>
+                            {index < cartProducts.length - 1 && <Divider sx={{ my: 1 }} />}
                         </Box>
-
-                        {/* Divider */}
-                        {index < cartProducts.length - 1 && <Divider sx={{ my: 1 }} />} {/* Adding margin to Divider */}
-                    </Box>
-                ))}
+                    ))
+                ) : (
+                    <Typography variant="body2" sx={{ color: dark[500] }}>
+                        No products in your cart
+                    </Typography>
+                )}
             </Box>
 
             <Box sx={{ flexGrow: 1 }} />
 
             <Divider sx={{ my: 2 }} />
 
+            {/* Subtotal */}
+            <Box sx={{ mb: 2 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'right' }}>
+                    Subtotal: Rp {calculateSubtotal().toLocaleString('id-ID')}
+                </Typography>
+            </Box>
+
             {/* BigButton */}
             <Box>
-                <BigButton />
+                <BigButton onClick={handleOrderNow} />
             </Box>
         </Container>
     );
