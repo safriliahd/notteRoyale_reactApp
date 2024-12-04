@@ -13,6 +13,7 @@ export default function LeftSideProductDetail({ setProduct }) {
         const fetchProduct = async () => {
             try {
                 const productData = await getProductById(id);
+                console.log("Fetched Product Data:", productData); // Log data produk yang didapat
                 const processedProduct = {
                     ...productData,
                     averageRating: productData.averageRating || 0, // Default rating jika tidak ada
@@ -25,17 +26,12 @@ export default function LeftSideProductDetail({ setProduct }) {
         };
         fetchProduct();
     }, [id, setProduct]);
+    
 
-    // Tampilkan pesan error jika terjadi kesalahan
     if (error) {
-        return (
-            <Typography variant="h6" color="error">
-                {error}
-            </Typography>
-        );
+        return <Typography variant="h6" color="error">{error}</Typography>;
     }
 
-    // Tampilkan loading jika data belum tersedia
     if (!product) {
         return <Typography variant="h6">Loading...</Typography>;
     }

@@ -25,7 +25,8 @@ export const getProductById = async (id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    const { id: productId, name, price, category, description, photo, averageRating, ratings } = response.data;
+    console.log("API Response:", response.data);
+    const { _id: productId, name, price, category, description, photo, averageRating, ratings } = response.data;
     return {
       productId,
       name,
@@ -36,6 +37,7 @@ export const getProductById = async (id) => {
       averageRating,
       ratings,
     };
+    
   } catch (error) {
     throw new Error(
       error.response ? error.response.data.message : 'Failed to fetch product details'

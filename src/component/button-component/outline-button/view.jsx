@@ -3,10 +3,11 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { primary } from '../../../theme/color'; 
 
-export default function OutlineButton() {
+export default function OutlineButton({onClick}) {
   return (
     <Stack spacing={2} direction="row">
       <Button 
+      onClick={onClick}
         variant="outlined" 
         sx={{
           color: primary[100], // Mengatur warna teks tombol dari warna primary
