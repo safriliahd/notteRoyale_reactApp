@@ -1,4 +1,4 @@
-import httpClient from "../../../API/httpClient"; // Pastikan file httpClient sudah disetup dengan benar
+import httpClient from "../../../api/httpClient"; // Pastikan file httpClient sudah disetup dengan benar
 
 export const listProduct = async () => {
   try {
