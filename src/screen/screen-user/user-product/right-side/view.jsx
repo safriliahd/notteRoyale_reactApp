@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, IconButton } from "@mui/material";
+import { Container, Typography, Box, IconButton, Divider } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import BigButton from "../../../../component/button-component/fulfill-button/view";
@@ -7,6 +7,7 @@ import OutlineButton from "../../../../component/button-component/outline-button
 import { useNavigate } from "react-router-dom"; // Import for navigation
 import { createOrder } from "../../../../store/endpoint/endpoint-user/order/view"; // Pastikan pathnya sesuai
 import { addToCart } from "../../../../store/endpoint/endpoint-user/cart/addToCart/view"; // Pastikan pathnya sesuai
+import { dark } from "../../../../theme/color";
 
 export default function RightSideProduct({ product }) {
     const [quantity, setQuantity] = useState(0); // Default quantity 0
@@ -73,9 +74,15 @@ export default function RightSideProduct({ product }) {
             mt: 4, mb: 4,
             display: 'flex',
             flexDirection: 'column',
-            height: "80vh",
+            height: "70vh",
         }}>
-            <Typography variant="h5" gutterBottom>
+            <Typography gutterBottom 
+                sx={{
+                    fontWeight: 'bold',
+                            fontSize: 24,
+                            color: dark[300],
+                }}
+            >
                 Order Details
             </Typography>
             <Box sx={{ mb: 2 }}>
@@ -101,10 +108,11 @@ export default function RightSideProduct({ product }) {
             {/* Spacer untuk mendorong button ke bawah */}
             <Box sx={{ flexGrow: 1 }} />
 
-            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+            <Typography sx={{ fontWeight: 'bold', textAlign: 'left', fontSize: 20 }}>
                 Sub Total: Rp. {subTotal.toLocaleString("id-ID")}
             </Typography>
 
+            <Divider sx={{ mb: 0, mt: 1 }} />
 
             <Box sx={{ marginTop: 2 }}>
                 <OutlineButton onClick={handleAddToCart}/>

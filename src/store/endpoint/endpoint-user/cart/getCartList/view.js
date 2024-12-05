@@ -20,6 +20,9 @@ export const getCartList = async () => {
         image: item.product ? item.product.photo : '', // Mengambil URL gambar produk
       };
     });
+    console.log('Fetched Cart Items:', cartItems);
+
+
 
     return { cartItems };
   } catch (error) {

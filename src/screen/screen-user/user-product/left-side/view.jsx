@@ -40,7 +40,7 @@ export default function LeftSideProductDetail({ setProduct }) {
 
     // Tampilkan detail produk jika data sudah tersedia
     return (
-        <Box sx={{ padding: 2, maxWidth: 800, margin: "auto", display: "flex", gap: 5, maxHeight: '100vh', }}>
+        <Box sx={{ padding: 2, maxWidth: 800, margin: "auto", display: "flex", gap: 5, maxHeight: '70vh', }}>
             {/* Box untuk gambar dan tombol Back */}
             <Box sx={{ position: "relative", flex: "1 1 50%", display: "flex", justifyContent: "center", alignItems: "flex-start", marginTop: 3 }}>
                 {/* Gambar Produk */}

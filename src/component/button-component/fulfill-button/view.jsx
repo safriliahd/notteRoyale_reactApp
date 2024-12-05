@@ -9,13 +9,14 @@ export default function BigButton({ onClick }) {
             <Button 
              onClick={onClick}
                 sx={{
-                    color: light[100], // Mengatur warna teks tombol dari warna light
-                    backgroundColor: primary[100], // Akses warna dari file color.js
-                    width: '100%', // Mengatur lebar tombol
+                    color: light[100], 
+                    backgroundColor: primary[100], 
+                    width: '100%', 
                     boxShadow: "none",
                     "&:hover": {
-                      backgroundColor: primary[100], // Latar belakang tetap primary[100] saat di-hover
+                      backgroundColor: primary[200], 
                       boxShadow: "none",
+                      color: light[200],
                     },
                     marginBottom: 5
                 }}

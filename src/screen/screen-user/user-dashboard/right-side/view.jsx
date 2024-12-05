@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Grid, TextField, MenuItem, Avatar, Divider } from '@mui/material';
-import { dark, light } from '../../../../theme/color';
+import {
+    Container,
+    Typography,
+    Box,
+    Grid,
+    TextField,
+    MenuItem,
+    Avatar,
+    Divider,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Button,
+} from '@mui/material';
+import { dark, light, primary } from '../../../../theme/color';
 import BigButton from '../../../../component/button-component/fulfill-button/view';
 import { getCartList } from '../../../../store/endpoint/endpoint-user/cart/getCartList/view';
 import { getOrderNumber } from '../../../../store/endpoint/endpoint-user/order/view';
 import { getAvailableTables } from '../../../../store/endpoint/endpoint-user/table/view';
 import { createOrder } from '../../../../store/endpoint/endpoint-user/order/view';
 import { clearCart } from '../../../../store/endpoint/endpoint-user/cart/clearCart/view';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteCartItem } from '../../../../store/endpoint/endpoint-user/cart/deleteCart/view';
 
 export default function RightSideDashboard() {
     const [cartProducts, setCartProducts] = useState([]);
@@ -16,6 +31,10 @@ export default function RightSideDashboard() {
     const [tables, setTables] = useState([]);
     const [selectedTable, setSelectedTable] = useState('');
     const [selectedTableId, setSelectedTableId] = useState(null);
+
+    // State untuk modal
+    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    const [openSuccessModal, setOpenSuccessModal] = useState(false);
 
     // Fetch data on component mount
     useEffect(() => {
@@ -35,7 +54,7 @@ export default function RightSideDashboard() {
                 setTables(data);
                 if (data.length > 0) {
                     setSelectedTable(data[0].tableNumber);
-                    setSelectedTableId(data[0]._id); // Menyimpan ID meja
+                    setSelectedTableId(data[0]._id);
                 }
             })
             .catch((error) => {
@@ -43,9 +62,9 @@ export default function RightSideDashboard() {
                 setTables([]);
             });
 
-            getCartList()
+        getCartList()
             .then((data) => {
-                console.log('Cart Products:', data); // Cek data yang diterima
+                console.log('Cart Products:', data);
                 setCartProducts(data.cartItems || []);
             })
             .catch((error) => {
@@ -64,67 +83,64 @@ export default function RightSideDashboard() {
 
         const table = tables.find((t) => t.tableNumber === selectedTableNumber);
         if (table) {
-            setSelectedTableId(table._id); // Simpan ID meja
+            setSelectedTableId(table._id);
         }
     };
 
     const handleOrderNow = () => {
+        setOpenConfirmModal(true);
+    };
+
+    const handleConfirmOrder = () => {
         const orderData = {
-          tableId: selectedTableId, // Pastikan menggunakan ID meja yang valid
-          items: cartProducts
-            .filter((item) => item.productId) // Memastikan produk memiliki productId
-            .map((item) => ({
-              product: item.productId, // Menggunakan productId dari cartItems
-              quantity: item.quantity,   // Kuantitas tetap
-            })),
+            tableId: selectedTableId,
+            items: cartProducts
+                .filter((product) => product.productId)
+                .map((product) => ({
+                    product: product.productId,
+                    quantity: product.quantity,
+                })),
         };
-      
+
         if (orderData.items.length === 0) {
-          console.error('No valid products to order');
-          return; // Jangan lanjutkan jika tidak ada produk yang valid
+            console.error('No valid products to order');
+            return;
         }
-      
+
         createOrder(orderData)
-          .then((data) => {
-            console.log('Order created successfully:', data);
-            clearCart(setCartProducts); // Kosongkan cart setelah pesanan berhasil
-          })
-          .catch((error) => {
-            console.error('Error creating order:', error.message);
-          });
-      };
-      
-    
-    
-    
-    
-    
-    
+            .then((data) => {
+                console.log('Order created successfully:', data);
+                clearCart(setCartProducts); // Kosongkan cart setelah pesanan berhasil
+                setOpenConfirmModal(false);
+                setOpenSuccessModal(true);
+            })
+            .catch((error) => {
+                console.error('Error creating order:', error.message);
+            });
+    };
+
+    const handleDeleteItem = async (productId) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this product from the cart?');
+        if (confirmDelete) {
+            console.log('Deleting product with ID:', productId); // Log ID for debugging
+            try {
+                await deleteCartItem(productId);
+                setCartProducts((prev) => prev.filter((product) => product.productId !== productId));
+                console.log('Item deleted successfully');
+            } catch (error) {
+                console.error('Failed to delete item:', error.message);
+            }
+        } else {
+            console.log('Item deletion canceled');
+        }
+    };
 
     return (
-        <Container
-            maxWidth="sm"
-            sx={{
-                mt: 4,
-                mb: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-            }}
-        >
+        <Container maxWidth="sm" sx={{ mt: 4, mb: 4, display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Header */}
             <Grid container alignItems="center" spacing={2} sx={{ mb: 0 }}>
                 <Grid item xs={8}>
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            fontWeight: 'bold',
-                            fontSize: 24,
-                            color: dark[400],
-                        }}
-                    >
-                        Current Order
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: 24, color: dark[300] }}>Current Order</Typography>
                     <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: 16 }}>
                         #{orderMessage}
                     </Typography>
@@ -169,17 +185,17 @@ export default function RightSideDashboard() {
                             Table Code C: Regular Indoor
                         </Typography>
                         <Typography variant="body2" sx={{ color: dark[500], marginTop: 1 }}>
-                            Table Code D: Regular Outdoor
+                            Table Code O: Regular Outdoor
                         </Typography>
                     </Grid>
                 </Grid>
             </Box>
 
-            {/* List Products */}
+            {/* Cart Products */}
             <Box sx={{ maxHeight: '300px', overflowY: 'auto', mb: 0 }}>
                 {cartProducts.length > 0 ? (
                     cartProducts.map((product, index) => (
-                        <Box key={product.id}>
+                        <Box key={product.productId}>
                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                                 <Avatar
                                     src={product.image}
@@ -192,7 +208,6 @@ export default function RightSideDashboard() {
                                         border: `1px solid ${light[400]}`,
                                     }}
                                 />
-
                                 <Box sx={{ flex: 1 }}>
                                     <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                                         {product.name}
@@ -204,6 +219,14 @@ export default function RightSideDashboard() {
                                         Qty: {product.quantity}
                                     </Typography>
                                 </Box>
+                                <DeleteIcon
+                                    sx={{
+                                        cursor: 'pointer',
+                                        color: 'error.dark',
+                                        '&:hover': { color: 'error.light' },
+                                    }}
+                                    onClick={() => handleDeleteItem(product.productId)}
+                                />
                             </Box>
                             {index < cartProducts.length - 1 && <Divider sx={{ my: 1 }} />}
                         </Box>
@@ -217,19 +240,78 @@ export default function RightSideDashboard() {
 
             <Box sx={{ flexGrow: 1 }} />
 
-            <Divider sx={{ my: 2 }} />
-
             {/* Subtotal */}
-            <Box sx={{ mb: 2 }}>
-                <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'right' }}>
+            <Box sx={{ mb: 0 }}>
+                <Typography sx={{ fontWeight: 'bold', textAlign: 'right', fontSize: 20 }}>
                     Subtotal: Rp {calculateSubtotal().toLocaleString('id-ID')}
                 </Typography>
             </Box>
+
+            <Divider sx={{ my: 2 }} />
 
             {/* BigButton */}
             <Box>
                 <BigButton onClick={handleOrderNow} />
             </Box>
+
+            {/* Modal Konfirmasi */}
+            <Dialog open={openConfirmModal} onClose={() => setOpenConfirmModal(false)}>
+                <DialogTitle sx={{ color: primary[100], textAlign: 'center', fontWeight: 'bold', mt: 3, fontSize: 28 }}>
+                    Confirm
+                </DialogTitle>
+                <DialogContent>
+                    <Typography sx={{ textAlign: 'center', color: dark[500] }}>
+                        Are you sure you want to place this order?
+                    </Typography>
+                </DialogContent>
+                <DialogActions sx={{ justifyContent: 'center', mb: 3 }}>
+                    <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={handleConfirmOrder}
+                        sx={{
+                             textTransform: 'none', px: 3, backgroundColor: primary[100], 
+                             boxShadow: "none",
+                             borderRadius: 25,
+                             "&:hover": {
+                               backgroundColor: primary[200], 
+                               boxShadow: "none",
+                               color: light[200],
+                             },
+                        }}
+                    >
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Modal Sukses */}
+            <Dialog open={openSuccessModal} onClose={() => setOpenSuccessModal(false)}>
+                <DialogTitle sx={{ color: 'success.main', textAlign: 'center', fontWeight: 'bold',  mt: 3, fontSize: 28 }}>
+                    Successful
+                </DialogTitle>
+                <DialogContent>
+                    <Typography sx={{ textAlign: 'center', color: dark[500] }}>
+                        Your order has been successfully placed!
+                    </Typography>
+                </DialogContent>
+                <DialogActions sx={{ justifyContent: 'center' }}>
+                    <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => setOpenSuccessModal(false)}
+                        sx={{
+                             textTransform: 'none',
+                              px: 3 ,
+                              borderRadius: 25,
+                              mb: 3
+
+                        }}
+                    >
+                        Done
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 }

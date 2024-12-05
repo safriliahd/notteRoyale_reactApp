@@ -1,23 +1,24 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { primary } from '../../../theme/color'; 
+import { primary, light } from '../../../theme/color'; 
 
 export default function OutlineButton({onClick}) {
   return (
     <Stack spacing={2} direction="row">
       <Button 
       onClick={onClick}
-        variant="outlined" 
         sx={{
-          color: primary[100], // Mengatur warna teks tombol dari warna primary
-          borderColor: primary[100], // Mengatur warna outline dari primary
-          width: '100%', // Membuat tombol lebih panjang
-          marginTop: 5, // Memberikan jarak margin top
-          "&:hover": {
-            backgroundColor: 'transparent', // Warna background tetap transparan saat hover
-            borderColor: primary[100], // Garis border tetap primary[100] saat hover
-          },
+          color: light[100], 
+                    backgroundColor: primary[100], 
+                    width: '100%', 
+                    boxShadow: "none",
+                    "&:hover": {
+                      backgroundColor: primary[200], 
+                      boxShadow: "none",
+                      color: light[200],
+                    },
+                    marginBottom: 5
         }}
       >
         Add to Cart
