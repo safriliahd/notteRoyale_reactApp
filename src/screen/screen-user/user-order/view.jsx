@@ -74,27 +74,32 @@ export default function OrderUser() {
         My Orders
       </Typography>
 
-      {/* Tabs untuk kategori */}
-      <Tabs
-        value={selectedTab}
-        onChange={handleChangeTab}
-        centered
-        TabIndicatorProps={{ style: { backgroundColor: primary[100] } }}
-        sx={{
-          "& .MuiTab-root": {
-            textTransform: "none",
-            fontSize: 22,
-            fontWeight: 600,
-            color: "#888",
-          },
-          "& .Mui-selected": {
-            color: dark[300],
-          },
-        }}
-      >
-        <Tab label="On-Process" />
-        <Tab label="Done" />
-      </Tabs>
+            {/* Tabs untuk kategori */}
+            <Tabs
+                value={selectedTab}
+                onChange={handleChangeTab}
+                centered
+                TabIndicatorProps={{ style: { backgroundColor: primary[100] } }}
+                sx={{
+                    "& .MuiTab-root": {
+                        textTransform: "none",
+                        fontSize: 22,
+                        fontWeight: 600,
+                        color: "#888",  // default color for inactive tabs
+                    },
+                    "& .Mui-selected": {
+                        color: dark[300],  // color when the tab is selected
+                    },
+                }}
+            >
+                <Tab
+                    label="On-Process"
+                />
+                <Tab
+                    label="Completed"
+                />
+            </Tabs>
+
 
       {/* Konten berdasarkan kategori */}
       <Box sx={{ mt: 2 }}>
