@@ -41,3 +41,18 @@ export const updateOrderStatusToDone = async (orderId) => {
       throw new Error(error.response ? error.response.data.message : "Failed to update order status");
     }
   };
+
+  export const getUserOrders = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Mengambil token
+      const response = await httpClient.get("/user/my-order", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data.orders; // Mengembalikan data orders
+    } catch (error) {
+      throw new Error(error.response ? error.response.data.message : "Failed to fetch user orders");
+    }
+  };
+  
