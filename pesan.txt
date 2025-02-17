@@ -1,0 +1,23 @@
+const handleChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+
+    if (e.target.name === "password") {
+      validatePassword(e.target.value);
+    }
+  };
+
+  const validatePassword = (password) => {
+    const minLength = password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+
+    if (!minLength) {
+      setPasswordError("Password must be at least 8 characters long.");
+    } else if (!hasUppercase) {
+      setPasswordError("Password must contain at least one uppercase letter.");
+    } else if (!hasNumber) {
+      setPasswordError("Password must contain at least one number.");
+    } else {
+      setPasswordError("");
+    }
+  };
